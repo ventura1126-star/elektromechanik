@@ -1,0 +1,1815 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Příprava na zkoušku profesní kvalifikace Elektromechanik pro TZ (26-004-H): lekce, plynový kotel, závady, testy a slovníček.">
+<title>Studovna elektromechanika</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: aplikace s menu vlevo (na mobilu nahoře), vždy jedna obrazovka; barvy z vodičů a médií kotle */
+:root{
+  --bg:#f1f4f3; --surface:#ffffff; --fg:#17201c; --muted:#56635d; --line:#d3dbd7;
+  --accent:#1c5ea6; --accent-soft:#e3edf8; --brown:#7a4824; --pe-g:#2c8a3a; --pe-y:#e2be17;
+  --good:#2a7a39; --good-soft:#e2f2e5; --bad:#b0331c; --bad-soft:#f8e4df; --warn-soft:#fbf3d6;
+  --casing:#ffffff; --metal:#c9d1ce; --metal-d:#8e9995; --hx:#dfe5e3;
+  --hot:#cf3f2b; --ret:#2f6dc0; --dhw:#e0861a; --cold:#22a2b5; --gas:#d2a10b; --flue:#7f8783; --air:#9cc3d8; --cond:#9aa9b8;
+  --flame:#ff8a1c; --spark:#3a7bff; --dash:rgba(255,255,255,.85);
+  --f-display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111614; --surface:#19201d; --fg:#e4ebe7; --muted:#9ba8a2; --line:#2c3632;
+  --accent:#6fa7e6; --accent-soft:#1a2a3c; --brown:#cf8f60; --pe-g:#55b864; --pe-y:#e6c535;
+  --good:#6cc47b; --good-soft:#18301e; --bad:#f07c63; --bad-soft:#3a1d17; --warn-soft:#332c12;
+  --casing:#1d2522; --metal:#3a4642; --metal-d:#6f7d77; --hx:#26302c;
+  --hot:#ef6450; --ret:#5d93e0; --dhw:#f0a040; --cold:#3cc2d4; --gas:#e6c02e; --flue:#9aa49f; --air:#6fa2bd; --cond:#7d8fa1;
+  --flame:#ff9b3a; --spark:#7fb0ff; --dash:rgba(255,255,255,.75); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111614; --surface:#19201d; --fg:#e4ebe7; --muted:#9ba8a2; --line:#2c3632;
+  --accent:#6fa7e6; --accent-soft:#1a2a3c; --brown:#cf8f60; --pe-g:#55b864; --pe-y:#e6c535;
+  --good:#6cc47b; --good-soft:#18301e; --bad:#f07c63; --bad-soft:#3a1d17; --warn-soft:#332c12;
+  --casing:#1d2522; --metal:#3a4642; --metal-d:#6f7d77; --hx:#26302c;
+  --hot:#ef6450; --ret:#5d93e0; --dhw:#f0a040; --cold:#3cc2d4; --gas:#e6c02e; --flue:#9aa49f; --air:#6fa2bd; --cond:#7d8fa1;
+  --flame:#ff9b3a; --spark:#7fb0ff; --dash:rgba(255,255,255,.75); color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font:17px/1.6 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.app{max-width:1260px;margin:0 auto;display:grid;grid-template-columns:220px minmax(0,1fr);gap:36px;padding-block:20px 80px}
+/* menu */
+nav.menu{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;display:flex;flex-direction:column;gap:2px;padding-top:8px}
+.brand{font:700 22px/1.1 var(--f-display);margin-bottom:6px;color:var(--fg);text-decoration:none}
+.pe{height:5px;border-radius:3px;background:repeating-linear-gradient(135deg,var(--pe-g) 0 12px,var(--pe-y) 12px 24px);margin-bottom:12px}
+nav.menu a{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:6px;color:var(--fg);text-decoration:none;font-weight:600;font-size:16px}
+nav.menu a .ix{font:600 12px/1 var(--f-mono);color:var(--muted);min-width:14px}
+nav.menu a:hover{background:var(--surface)}
+nav.menu a[aria-current="page"]{background:var(--accent);color:var(--surface)}
+nav.menu a[aria-current="page"] .ix{color:var(--surface)}
+main{min-width:0}
+.view{display:flex;flex-direction:column;gap:16px}
+/* typografie */
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(32px,4.5vw,46px);font-weight:700}
+h2{font-size:28px;font-weight:700}
+h3{font-size:21px;font-weight:600;margin-top:18px}
+p{margin:0}
+ul,ol{margin:0;padding-left:22px}
+li+li{margin-top:4px}
+.eyebrow{font:600 13px/1 var(--f-display);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.lead{font-size:19px;color:var(--muted);max-width:64ch}
+.how{font-size:14px;color:var(--muted)}
+.code{font-family:var(--f-mono);font-size:.88em;background:var(--accent-soft);padding:1px 6px;border-radius:4px}
+a{color:var(--accent)}
+.body-text>*{max-width:76ch}
+.body-text section, .lesson-body{display:flex;flex-direction:column;gap:12px}
+/* obsah z učiva */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.facts div{background:var(--surface);padding:12px 14px}
+.facts b{display:block;font:700 24px/1.1 var(--f-display)}
+.facts span{font-size:14px;color:var(--muted)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);max-width:100%!important}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 13px/1.3 var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;font-family:var(--f-mono);font-size:14px;white-space:nowrap}
+.k-head{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.k-num{font:700 15px/1 var(--f-mono);color:var(--surface);background:var(--brown);padding:5px 8px;border-radius:4px}
+.ex{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--surface);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.ex .t{font:600 14px/1 var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.ex pre,.formula{font-family:var(--f-mono);font-size:14px;white-space:pre-wrap;margin:0;background:var(--bg);padding:10px 12px;border-radius:4px;overflow-x:auto}
+.warn{background:var(--warn-soft);border-radius:6px;padding:12px 16px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto}
+figcaption{font-size:14px;color:var(--muted);margin-top:6px}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--f-mono);fill:var(--fg)}
+.s-line{stroke:var(--fg);fill:none;stroke-width:2}
+.s-br{stroke:var(--brown);stroke-width:4;fill:none}
+.s-term{fill:var(--surface);stroke:var(--fg);stroke-width:2}
+/* ovládací prvky */
+button,.btn{font:600 15px/1 var(--f-body);border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:10px 14px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+button.primary,.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,.part:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{display:inline-flex;gap:6px;align-items:center;font-size:14px;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface);cursor:pointer}
+select,input[type="search"]{font:600 16px var(--f-body);padding:10px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--fg)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px}
+/* domů */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.stat b{font:700 34px/1 var(--f-display)}
+.stat span{color:var(--muted);font-size:15px}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;min-width:80px}
+.bar i{display:block;height:100%;background:var(--good)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+a.tile{display:flex;flex-direction:column;gap:6px;padding:18px;background:var(--surface);border:2px solid var(--line);border-radius:12px;color:var(--fg);text-decoration:none;min-height:130px}
+a.tile:hover{border-color:var(--accent)}
+a.tile h2{font-size:22px}
+a.tile p{color:var(--muted);font-size:15px;flex:1}
+a.tile .new{align-self:flex-start;font:600 11px/1 var(--f-display);letter-spacing:.12em;text-transform:uppercase;background:var(--pe-y);color:#17201c;padding:4px 6px;border-radius:3px}
+/* lekce */
+.lessons{display:flex;flex-direction:column;gap:8px}
+a.lrow{display:flex;gap:14px;align-items:center;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:10px;color:var(--fg);text-decoration:none}
+a.lrow:hover{border-color:var(--accent)}
+a.lrow .t{flex:1;font-weight:600}
+.done{font:600 13px/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase;padding:5px 8px;border-radius:4px;background:var(--good-soft);color:var(--good)}
+.todo{font:600 13px/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase;padding:5px 8px;border-radius:4px;background:var(--bg);color:var(--muted)}
+.lnav{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:16px}
+/* testy */
+.q{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:8px}
+.q .meta{font:600 12px/1 var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.q .qt{font-weight:600}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:6px;cursor:pointer;background:var(--bg)}
+.opt input{margin-top:5px}
+.opt.ok{background:var(--good-soft);border-color:var(--good)}
+.opt.no{background:var(--bad-soft);border-color:var(--bad)}
+.expl{font-size:15px;color:var(--muted);border-left:3px solid var(--pe-g);padding-left:10px}
+.score{font:700 30px/1 var(--f-display)}
+.pass{color:var(--good)} .fail{color:var(--bad)}
+details.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 16px;max-width:80ch}
+details.card summary{cursor:pointer;font-weight:600}
+details.card>div{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+/* kotel */
+.stage{display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);gap:24px;align-items:start}
+.drawing{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lbl{font:600 12px/1 var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+#kotel{width:100%}
+#kotel text{font-family:var(--f-mono)}
+.casing{fill:var(--casing);stroke:var(--metal-d);stroke-width:2}
+.sh{fill:var(--metal);stroke:var(--metal-d);stroke-width:1.5;transition:stroke .15s,fill .15s}
+.hxbody{fill:var(--hx);stroke:var(--metal-d);stroke-width:1.5}
+.coil{fill:none;stroke:var(--metal-d);stroke-width:1.2}
+.pipe{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.p-hot{stroke:var(--hot);stroke-width:8}.p-ret{stroke:var(--ret);stroke-width:8}.p-dhw{stroke:var(--dhw);stroke-width:7}
+.p-cold{stroke:var(--cold);stroke-width:7}.p-gas{stroke:var(--gas);stroke-width:6}.p-cond{stroke:var(--cond);stroke-width:4}
+.p-flue{stroke:var(--flue);stroke-width:14}.p-air{stroke:var(--air);stroke-width:6}.p-mix{stroke:var(--metal-d);stroke-width:10}
+.fl{fill:none;stroke:var(--dash);stroke-width:2;stroke-dasharray:4 12;stroke-linecap:round;opacity:0;animation:flow .9s linear infinite}
+.fl.on{opacity:1}
+@keyframes flow{to{stroke-dashoffset:-16}}
+.part{cursor:pointer}
+.part:hover .sh{stroke:var(--accent);stroke-width:2.5}
+.part.sel .sh,.part.hl .sh{stroke:var(--accent);stroke-width:3;fill:var(--accent-soft)}
+.part.sel .badge circle,.part.hl .badge circle{fill:var(--accent)}
+.badge circle{fill:var(--fg)}
+#kotel .badge text{fill:var(--surface);font-size:11px;font-weight:600;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.part.quiz-ok .sh{fill:var(--good-soft);stroke:var(--good)}
+.part.quiz-no .sh{fill:var(--bad-soft);stroke:var(--bad)}
+#kotel .lab{fill:var(--muted);font-size:11px;text-anchor:middle}
+#kotel .ink{fill:var(--fg)}
+.spin{transform-box:fill-box;transform-origin:center}
+.spin.on{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.flame{fill:none;stroke:var(--flame);stroke-width:6;stroke-dasharray:3 4;opacity:0;transition:opacity .3s}
+.flame.on{opacity:1;animation:flick .25s steps(2) infinite}
+@keyframes flick{50%{stroke-dashoffset:3}}
+.spark{fill:none;stroke:var(--spark);stroke-width:2.5;opacity:0}
+.spark.on{animation:zap .18s steps(2) infinite}
+@keyframes zap{0%{opacity:1}50%{opacity:0}}
+.v3arrow{transition:transform .4s;transform-box:fill-box;transform-origin:center}
+.disp{fill:var(--accent-soft);stroke:var(--metal-d)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:18px;height:6px;border-radius:3px;display:inline-block}
+.kpanel{position:sticky;top:env(safe-area-inset-top,0px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
+.chipc{display:inline-block;font:600 12px/1 var(--f-display);letter-spacing:.1em;text-transform:uppercase;padding:5px 8px;border-radius:4px;background:var(--accent-soft);color:var(--accent);align-self:flex-start}
+.measure{background:var(--bg);border-left:4px solid var(--accent);padding:10px 12px;border-radius:4px}
+.num{font:700 16px/1 var(--f-mono);background:var(--fg);color:var(--surface);border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.ptitle{display:flex;gap:10px;align-items:center}
+#info h3{font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+.steps{display:flex;gap:4px;flex-wrap:wrap}
+.steps button{min-width:40px;font-family:var(--f-mono);justify-content:center}
+.quizbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--accent-soft);border-radius:8px;padding:10px 12px}
+.quizbar b{font-family:var(--f-display);font-size:20px}
+/* závady */
+.fault summary{font:600 20px/1.3 var(--f-display)}
+.fault ol li{margin-top:6px}
+.cause{display:flex;flex-wrap:wrap;gap:6px}
+/* slovník */
+dl.gl{display:grid;grid-template-columns:minmax(110px,200px) minmax(0,1fr);gap:0;margin:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+dl.gl dt,dl.gl dd{margin:0;padding:10px 14px;border-bottom:1px solid var(--line)}
+dl.gl dt{font-weight:700;font-family:var(--f-mono);font-size:15px}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr);gap:16px}
+  nav.menu{position:static;flex-direction:row;flex-wrap:wrap;gap:4px;padding:0}
+  nav.menu a.brand{width:100%;border:0;background:none;padding:0 0 4px;font-size:22px}
+  .pe{width:100%}
+  nav.menu a{border:1px solid var(--line);background:var(--surface);padding:6px 10px;font-size:15px}
+  nav.menu a .ix{display:none}
+  .stage{grid-template-columns:minmax(0,1fr)}
+  .kpanel{position:static;max-height:none;order:-1}
+  dl.gl{grid-template-columns:minmax(0,1fr)}
+  dl.gl dt{border-bottom:0;padding-bottom:0}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.fl,.spin.on,.flame.on,.spark.on{animation:none}.spark.on{opacity:1}}
+</style>
+
+<style>body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head>
+<body>
+<div class="app">
+<nav class="menu" aria-label="Hlavní menu">
+  <a class="brand" href="#domu" data-go="domu">Studovna elektromechanika</a>
+  <div class="pe"></div>
+  <a href="#domu" data-go="domu"><span class="ix">⌂</span>Domů</a>
+  <a href="#zkouska" data-go="zkouska"><span class="ix">1</span>Zkouška</a>
+  <a href="#ucivo" data-go="ucivo"><span class="ix">2</span>Učivo</a>
+  <a href="#kotel" data-go="kotel"><span class="ix">3</span>Kotel</a>
+  <a href="#zavady" data-go="zavady"><span class="ix">4</span>Závady kotle</a>
+  <a href="#praxe" data-go="praxe"><span class="ix">5</span>Praxe</a>
+  <a href="#testy" data-go="testy"><span class="ix">6</span>Testy</a>
+  <a href="#ustni" data-go="ustni"><span class="ix">7</span>Ústní zkouška</a>
+  <a href="#slovnik" data-go="slovnik"><span class="ix">8</span>Slovníček</a>
+</nav>
+
+<main>
+<!-- DOMŮ -->
+<div class="view" id="v-domu">
+  <div class="eyebrow">Elektromechanik pro TZ · 26-004-H</div>
+  <h1>Vítejte ve studovně</h1>
+  <p class="lead">Příprava na zkoušku na jednom místě. Postupujte podle menu, od Zkoušky po Slovníček. Aplikace si v tomto prohlížeči pamatuje, které lekce máte hotové a kde chybujete.</p>
+  <div class="stats">
+    <div class="stat"><b id="st-lessons">0 / 11</b><span>hotových lekcí</span><div class="bar"><i id="st-bar" style="width:0%"></i></div></div>
+    <div class="stat"><b id="st-exam">—</b><span id="st-exam-t">simulace zkoušky zatím neproběhla</span></div>
+    <div class="stat"><b id="st-wrong">0</b><span>otázek k zopakování</span></div>
+  </div>
+  <div class="row"><a class="btn primary" id="continue" href="#ucivo" data-go="ucivo">Pokračovat v učení →</a></div>
+  <div class="tiles">
+    <a class="tile" href="#zkouska" data-go="zkouska"><span class="eyebrow">1</span><h2>Zkouška</h2><p>Jak zkouška probíhá, jak se hodnotí, studijní plán.</p></a>
+    <a class="tile" href="#ucivo" data-go="ucivo"><span class="eyebrow">2</span><h2>Učivo</h2><p>11 lekcí s výkladem, příklady a kontrolními otázkami.</p></a>
+    <a class="tile" href="#kotel" data-go="kotel"><span class="eyebrow">3</span><h2>Kotel</h2><p>Plynový kotel v řezu. Součásti, animace provozu, startovací sekvence.</p></a>
+    <a class="tile" href="#zavady" data-go="zavady"><span class="new">nové</span><h2>Závady kotle</h2><p>Kotel nezapálí, zhasíná, hlásí tlak. Co měřit a v jakém pořadí.</p></a>
+    <a class="tile" href="#praxe" data-go="praxe"><span class="eyebrow">5</span><h2>Praxe</h2><p>Úlohy praktické zkoušky a vzor protokolu.</p></a>
+    <a class="tile" href="#testy" data-go="testy"><span class="eyebrow">6</span><h2>Testy</h2><p>Procvičování po tématech, simulace zkoušky, opakování chyb.</p></a>
+    <a class="tile" href="#ustni" data-go="ustni"><span class="eyebrow">7</span><h2>Ústní zkouška</h2><p>Otázky, na které se zkoušející doptává.</p></a>
+    <a class="tile" href="#slovnik" data-go="slovnik"><span class="new">nové</span><h2>Slovníček</h2><p>Zkratky a pojmy vysvětlené jednou větou.</p></a>
+  </div>
+</div>
+
+<!-- ZKOUŠKA -->
+<div class="view body-text" id="v-zkouska" hidden>
+<section>
+  <div class="eyebrow">Přehled</div>
+  <h2>Jak zkouška probíhá</h2>
+  <div class="facts">
+    <div><b>6–8 h</b><span>vlastní zkouška, lze rozložit do více dnů</span></div>
+    <div><b>20–30 min</b><span>příprava</span></div>
+    <div><b>80 %</b><span>správně v testu celkem</span></div>
+    <div><b>≥ 50 %</b><span>správně v každém kritériu testu</span></div>
+    <div><b>3 → 1</b><span>tři odpovědi, právě jedna správná</span></div>
+    <div><b>Výuční list</b><span>technického směru je vstupní podmínka</span></div>
+  </div>
+  <p>Zkouška má tři formy ověření: <b>písemný test</b> (kompetence 1–7), <b>ústní vysvětlení</b> (zkoušející po testu doptává) a <b>praktické předvedení</b> (měření, montáž obvodu, kontrola a oprava spotřebiče). Hodnotí se každá kompetence zvlášť „splnil / nesplnil“. Celkově „vyhověl“ jen tehdy, když splníte <b>všech 10</b>. Zkouší autorizovaná osoba; před zkouškou vás seznámí s pracovištěm a BOZP.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>#</th><th>Odborná způsobilost</th><th>Způsob ověření</th><th>Otázek v bance</th></tr></thead>
+    <tbody>
+      <tr><td class="n">1</td><td>Orientace v základech elektrotechniky</td><td>písemně + ústně</td><td class="n">50</td></tr>
+      <tr><td class="n">2</td><td>Bezpečnost při obsluze a práci na el. zařízeních</td><td>písemně + ústně</td><td class="n">20</td></tr>
+      <tr><td class="n">3</td><td>Ochrana před úrazem elektrickým proudem</td><td>písemně + ústně</td><td class="n">50</td></tr>
+      <tr><td class="n">4</td><td>Jištění el. zařízení a kladení vedení</td><td>písemně + ústně</td><td class="n">20</td></tr>
+      <tr><td class="n">5</td><td>Ochrana před bleskem a přepětím (LPS)</td><td>písemně + ústní obhajoba</td><td class="n">20</td></tr>
+      <tr><td class="n">6</td><td>Technická dokumentace a normy</td><td>praktické předvedení + ústně</td><td class="n">40</td></tr>
+      <tr><td class="n">7</td><td>Měření el. veličin a vyhodnocení</td><td>praktické předvedení + ústně</td><td class="n">10</td></tr>
+      <tr><td class="n">8</td><td>Montáž a zapojování elektroinstalací</td><td>praktické předvedení + ústně</td><td class="n">—</td></tr>
+      <tr><td class="n">9</td><td>Kontroly a opravy el. spotřebičů</td><td>praktické předvedení + ústně</td><td class="n">—</td></tr>
+      <tr><td class="n">10</td><td>První pomoc při úrazu elektřinou</td><td>ústně</td><td class="n">—</td></tr>
+    </tbody>
+  </table></div>
+  <div class="warn"><b>Pozor na název předpisu.</b> 194/2022 Sb. je <b>nařízení vlády</b> (ne vyhláška). Nahradilo vyhlášku 50/1978 Sb. a platí od 1. 7. 2022. Samotná zkouška 26-004-H není zkouškou podle § 9 NV 194/2022. Osvědčení „elektrotechnik“ získáte zvlášť, u tříčlenné komise. Profesní kvalifikace ale podle § 6 odst. 7 může nahradit odbornou kvalifikaci (vzdělání) pro práce do 1 kV AC bez nebezpečí výbuchu. Proto je legislativa v této přípravě taky.</div>
+</section><section>
+  <div class="eyebrow">Studijní plán</div>
+  <h2>Jak se připravit za tři týdny</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Týden</th><th>Teorie</th><th>Procvičování</th></tr></thead>
+    <tbody>
+      <tr><td class="n">1</td><td>Kompetence 1, 2, 3: vzorce, sítě TN/TT/IT, pět pravidel, ochranná opatření, chránič</td><td>Test po tématech 1–3, dokud nemáte 90 %. Spočítejte všechny ukázky ručně.</td></tr>
+      <tr><td class="n">2</td><td>Kompetence 4, 5, 6, 7: jističe, průřezy, LPS a SPD, značky, měřicí metody</td><td>Test po tématech 4–7. Nakreslete z hlavy schodišťové zapojení a ovládací obvod stykače.</td></tr>
+      <tr><td class="n">3</td><td>Kompetence 8, 9, 10 + NV 194/2022</td><td>3× simulace zkoušky. Ústní otázky nahlas. Pokud můžete, zapojte si na cvičné desce zásuvku, světlo a stykač.</td></tr>
+    </tbody>
+  </table></div>
+</section><section>
+  <div class="eyebrow">Zdroje</div>
+  <h2>Odkud příprava vychází</h2>
+  <ul>
+    <li><a href="https://www.narodnikvalifikace.cz/kvalifikace-220-Elektromechanik_elektromechanicka_pro_TZ" target="_blank" rel="noopener">NSK – Elektromechanik/elektromechanička pro TZ (26-004-H)</a></li>
+    <li><a href="https://www.narodnikvalifikace.cz/kvalifikace-220-Elektromechanik_elektromechanicka_pro_TZ/hodnotici-standard" target="_blank" rel="noopener">Hodnoticí standard 26-004-H</a></li>
+    <li><a href="https://www.zakonyprolidi.cz/cs/2022-194" target="_blank" rel="noopener">Nařízení vlády 194/2022 Sb. (zakonyprolidi.cz)</a></li>
+    <li>ČSN EN 50110-1 ed. 3, ČSN 33 2000-4-41 ed. 2, ČSN 33 2000-5-52, ČSN 33 2000-6, ČSN EN 62305-1 až 4, ČSN EN 60529, ČSN EN 60617, ČSN EN 50678, ČSN EN 50699 (normy uvedené v materiálních předpokladech standardu)</li>
+  </ul>
+  <p class="how">Testové otázky jsou cvičné, sestavené podle kritérií hodnoticího standardu. Oficiální banka otázek není veřejná.</p>
+</section>
+</div>
+
+<!-- UČIVO -->
+<div class="view" id="v-ucivo" hidden>
+  <div id="lesson-list" class="view">
+    <div class="eyebrow">Učivo</div>
+    <h1>Lekce</h1>
+    <p class="lead">Každá lekce odpovídá jednomu tématu zkoušky. Na konci lekce je 5 kontrolních otázek a tlačítko „Hotovo“.</p>
+    <div class="lessons" id="lessons"></div>
+  </div>
+  <div id="lesson-detail" class="view" hidden>
+    <div class="row" style="justify-content:space-between">
+      <a href="#ucivo" data-go="ucivo" class="btn">← Všechny lekce</a>
+      <span class="how" id="lesson-pos"></span>
+    </div>
+    <div class="body-text" id="lesson-bodies">
+<div class="lesson-body" data-lesson="k1" hidden>
+  <div class="k-head"><span class="k-num">1</span><h2>Základy elektrotechniky</h2></div>
+  <p class="how">Kritéria: vztahy U, I, R, P, W pro DC i AC · Kirchhoffovy zákony, sériové a paralelní řazení · sítě TN, TT, IT, rozdíl TN-C a TN-S · značení vodičů a svorek · krytí IP</p>
+  <h3>Základní vztahy</h3>
+  <div class="formula">Ohmův zákon     U = R · I     [V = Ω · A]
+Výkon DC        P = U · I = R · I² = U² / R     [W]
+Práce (energie) W = P · t     [J = W·s, v praxi kWh]
+Odpor vodiče    R = ρ · l / S    ρCu = 0,0178 Ω·mm²/m, ρAl = 0,0285 Ω·mm²/m
+AC 1f činný     P = U · I · cos φ       [W]
+AC 1f jalový    Q = U · I · sin φ       [var]
+AC 1f zdánlivý  S = U · I               [VA]
+AC 3f činný     P = √3 · U · I · cos φ  (U = sdružené 400 V)
+Sítě ČR         3 × 400/230 V, 50 Hz;  Usdr = √3 · Uf;  Umax = √2 · Uef ≈ 325 V</div>
+  <h3>Řazení odporů a Kirchhoffovy zákony</h3>
+  <ul>
+    <li><b>Sériově:</b> R = R1 + R2 + …; proud je všude stejný, napětí se dělí v poměru odporů.</li>
+    <li><b>Paralelně:</b> 1/R = 1/R1 + 1/R2 + …; napětí je na všech stejné, proudy se sčítají. Výsledný odpor je menší než nejmenší z nich. Pro dva odpory R = R1·R2/(R1+R2).</li>
+    <li><b>1. Kirchhoffův zákon (uzel):</b> součet proudů do uzlu se rovná součtu proudů z uzlu (Σ I = 0).</li>
+    <li><b>2. Kirchhoffův zákon (smyčka):</b> součet napětí v uzavřené smyčce je nulový. Součet úbytků se rovná napětí zdroje.</li>
+  </ul>
+  <div class="ex"><div class="t">Praktická ukázka · varná konvice</div>
+    <p>Štítek 2000 W / 230 V. Jaký teče proud, jaký je odpor topné spirály a kolik zaplatíte za 15 minut denně po celý měsíc při 6 Kč/kWh?</p>
+    <pre>I = P / U = 2000 / 230 = 8,7 A
+R = U² / P = 230² / 2000 = 26,5 Ω
+W = 2 kW · 0,25 h · 30 dní = 15 kWh  →  15 · 6 = 90 Kč</pre>
+  </div>
+  <div class="ex"><div class="t">Praktická ukázka · proud trojfázového motoru</div>
+    <p>Štítek: 5,5 kW (výkon na hřídeli), 400 V, cos φ = 0,85, účinnost η = 0,87.</p>
+    <pre>I = P / (√3 · U · cos φ · η) = 5500 / (1,732 · 400 · 0,85 · 0,87) = 10,7 A</pre>
+    <p>Štítek motoru udává <b>mechanický</b> výkon. Proto se při výpočtu proudu dělí účinností.</p>
+  </div>
+  <div class="ex"><div class="t">Praktická ukázka · paralelní a sériové řazení</div>
+    <pre>R1 = 30 Ω a R2 = 60 Ω paralelně:  R = 30·60/(30+60) = 20 Ω
+připojeno na 12 V:  I = 12/20 = 0,6 A   (I1 = 0,4 A, I2 = 0,2 A → 1. Kirchhoff: 0,4 + 0,2 = 0,6)
+tytéž odpory sériově:  R = 90 Ω,  I = 0,133 A,  U1 = 4 V,  U2 = 8 V  (2. Kirchhoff: 4 + 8 = 12)</pre>
+  </div>
+  <h3>Napěťová pásma</h3>
+  <ul>
+    <li><b>Malé napětí (ELV):</b> do 50 V AC / 120 V DC.</li>
+    <li><b>Nízké napětí (NN):</b> do 1000 V AC / 1500 V DC.</li>
+    <li><b>Vysoké napětí (VN):</b> 1–52 kV; VVN 52–300 kV; ZVN 300–800 kV; UVN nad 800 kV.</li>
+  </ul>
+  <h3>Typy sítí (ČSN 33 2000-1)</h3>
+  <p><b>1. písmeno</b> = vztah zdroje k zemi: <span class="code">T</span> uzel přímo uzemněn, <span class="code">I</span> izolován nebo uzemněn přes impedanci. <b>2. písmeno</b> = neživé části: <span class="code">T</span> uzemněny samostatně, <span class="code">N</span> spojeny s uzemněným bodem sítě. <b>Další písmena</b>: <span class="code">C</span> PE a N sloučeny (PEN), <span class="code">S</span> PE a N odděleny.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Síť</th><th>Popis</th><th>Kde ji potkáte</th></tr></thead>
+    <tbody>
+      <tr><td class="n">TN-C</td><td>Jediný vodič PEN plní funkci N i PE</td><td>Starší rozvody, distribuční síť. Za PEN nelze dát chránič.</td></tr>
+      <tr><td class="n">TN-S</td><td>N a PE vedeny odděleně v celé síti</td><td>Nové instalace (5vodičový rozvod)</td></tr>
+      <tr><td class="n">TN-C-S</td><td>Na začátku PEN, v místě rozdělení (obvykle hlavní rozvaděč) se dělí na PE a N. Za rozdělením se už nesmí spojit.</td><td>Nejběžnější v domech v ČR</td></tr>
+      <tr><td class="n">TT</td><td>Uzel uzemněn u zdroje, neživé části mají vlastní zemnič</td><td>Kde nelze zaručit PEN. Ochrana obvykle chráničem.</td></tr>
+      <tr><td class="n">IT</td><td>Zdroj izolován od země, neživé části uzemněny. Při první poruše nevypíná, hlídač izolace hlásí.</td><td>Nemocnice (operační sály), doly</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Značení vodičů a svorek</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Vodič / svorka</th><th>Značení</th></tr></thead>
+    <tbody>
+      <tr><td>Fázové vodiče L1, L2, L3</td><td>hnědá, černá, šedá</td></tr>
+      <tr><td>Střední (nulový) vodič N</td><td>světle modrá</td></tr>
+      <tr><td>Ochranný vodič PE</td><td>zelenožlutá. Nesmí se použít k ničemu jinému.</td></tr>
+      <tr><td>PEN</td><td>zelenožlutá s modrým označením konců (nebo modrá se zelenožlutými konci)</td></tr>
+      <tr><td>Svorky motoru</td><td class="n">U1 V1 W1 (začátky vinutí), U2 V2 W2 (konce)</td></tr>
+      <tr><td>Cívka stykače / relé</td><td class="n">A1 – A2</td></tr>
+      <tr><td>Hlavní kontakty stykače</td><td class="n">1-2, 3-4, 5-6 (L1-T1 …)</td></tr>
+      <tr><td>Pomocné kontakty</td><td class="n">x3-x4 spínací (NO), x1-x2 rozpínací (NC), např. 13-14, 21-22</td></tr>
+      <tr><td>Tepelné nadproudové relé</td><td class="n">95-96 rozpínací, 97-98 spínací</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Stupně krytí IP (ČSN EN 60529)</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Číslice</th><th>1. – cizí tělesa a dotyk</th><th>2. – voda</th></tr></thead>
+    <tbody>
+      <tr><td class="n">0</td><td>bez ochrany</td><td>bez ochrany</td></tr>
+      <tr><td class="n">1</td><td>tělesa &gt; 50 mm (hřbet ruky)</td><td>svisle kapající voda</td></tr>
+      <tr><td class="n">2</td><td>tělesa &gt; 12,5 mm (prst)</td><td>kapající voda při náklonu 15°</td></tr>
+      <tr><td class="n">3</td><td>tělesa &gt; 2,5 mm (nástroj)</td><td>kropení (déšť do 60°)</td></tr>
+      <tr><td class="n">4</td><td>tělesa &gt; 1 mm (drát)</td><td>stříkající voda ze všech směrů</td></tr>
+      <tr><td class="n">5</td><td>ochrana před prachem</td><td>tryskající voda</td></tr>
+      <tr><td class="n">6</td><td>prachotěsné</td><td>intenzivně tryskající voda</td></tr>
+      <tr><td class="n">7</td><td>—</td><td>dočasné ponoření</td></tr>
+      <tr><td class="n">8</td><td>—</td><td>trvalé ponoření</td></tr>
+    </tbody>
+  </table></div>
+  <p>Příklad: <span class="code">IP44</span> = chráněno proti drátu &gt; 1 mm a stříkající vodě. Typické pro venkovní zásuvky a koupelny. Mechanickou odolnost proti nárazu udává kód <span class="code">IK</span>, ne IP.</p>
+</div>
+<div class="lesson-body" data-lesson="k2" hidden>
+  <div class="k-head"><span class="k-num">2</span><h2>Bezpečnost při obsluze a práci</h2></div>
+  <p class="how">Kritéria: rozdíl obsluha × práce · práce bez napětí · práce pod napětím · práce v blízkosti živých částí. Norma ČSN EN 50110-1 ed. 3.</p>
+  <ul>
+    <li><b>Obsluha</b> = činnosti ke změně provozního stavu zařízení: spínání, ovládání, nastavování, sledování (monitorování), výměna pojistek běžným způsobem. Obsluhu zvládne i osoba poučená.</li>
+    <li><b>Práce</b> = montáž, opravy, údržba, úpravy, zkoušení a měření, při kterých zasahujete do zařízení. Vyžaduje odpovídající kvalifikaci (elektrotechnik).</li>
+  </ul>
+  <h3>Práce bez napětí: pět pravidel (v tomto pořadí)</h3>
+  <ol>
+    <li><b>Vypnout</b> a úplně odpojit pracoviště od všech zdrojů, včetně zpětných (fotovoltaika, záložní zdroje, kondenzátory).</li>
+    <li><b>Zajistit proti opětovnému zapnutí</b>: zámek, vyjmutá pojistka, tabulka „Nezapínat! Pracuje se“.</li>
+    <li><b>Ověřit beznapěťový stav</b> na všech pólech zkoušečkou napětí. Její funkci ověřte na známém zdroji těsně před měřením i po něm.</li>
+    <li><b>Uzemnit a zkratovat</b>: povinně na VN, na NN tam, kde hrozí, že se objeví napětí (venkovní vedení, indukce). Soupravu připojte <b>nejdřív k zemi, pak k vodičům</b>. Při odstraňování postupujte opačně.</li>
+    <li><b>Zakrýt nebo oddělit sousední živé části</b>, které zůstaly pod napětím: izolační kryty, přepážky, zábrany.</li>
+  </ol>
+  <p>Po skončení práce postupujete obráceně. Než zapnete, ověříte, že jsou všichni pracovníci mimo zařízení a nářadí je odklizeno.</p>
+  <h3>Práce pod napětím a v blízkosti živých částí</h3>
+  <ul>
+    <li><b>Práce pod napětím</b> (PPN) = vědomý dotyk živých částí nebo vniknutí do zóny práce pod napětím. Smí ji dělat jen speciálně vyškolené osoby se zvláštními postupy a nářadím. Izolované nářadí do 1000 V nese značku dvojitého trojúhelníku.</li>
+    <li><b>Zóny</b> se vymezují vzdálenostmi: <span class="code">DL</span> hranice zóny práce pod napětím, <span class="code">DV</span> hranice zóny blízkosti. Pro NN je DL „bez dotyku“ a DV 0,3 m. Pro VN jsou hodnoty v tabulce normy.</li>
+    <li>Práce v blízkosti živých částí NN se zajišťuje zakrytím, zábranami, dohledem nebo dodržením vzdálenosti. Osoba poučená ji smí dělat jen s dohledem osoby znalé.</li>
+    <li>Ochranné pomůcky: izolační rukavice, obuv, izolační podložka, obličejový štít proti oblouku, nehořlavý oděv. Před použitím je zkontrolujte.</li>
+  </ul>
+</div>
+<div class="lesson-body" data-lesson="k3" hidden>
+  <div class="k-head"><span class="k-num">3</span><h2>Ochrana před úrazem elektrickým proudem</h2></div>
+  <p class="how">Kritéria: základní ochrana · ochrana při poruše · ochranná opatření, normální a doplňková ochrana · proudový chránič · třídy ochrany. Norma ČSN 33 2000-4-41 ed. 2.</p>
+  <div class="grid2">
+    <div class="ex"><div class="t">Základní ochrana</div><p>Chrání před dotykem <b>živých částí</b> (těch, které jsou pod napětím za normálního provozu).</p>
+      <ul><li>základní izolace živých částí</li><li>přepážky a kryty</li><li>zábrany (jen proti neúmyslnému dotyku)</li><li>ochrana polohou (umístění mimo dosah)</li></ul></div>
+    <div class="ex"><div class="t">Ochrana při poruše</div><p>Chrání před dotykem <b>neživých částí</b> (kostra, kryt), na které se napětí dostane jen při poruše izolace.</p>
+      <ul><li>ochranné uzemnění a ochranné pospojování</li><li>automatické odpojení od zdroje</li><li>přídavná izolace</li><li>ochranné oddělení obvodů</li></ul></div>
+  </div>
+  <h3>Ochranná opatření</h3>
+  <ol>
+    <li><b>Automatické odpojení od zdroje</b>: nejběžnější. Při poruše teče poruchový proud přes PE a jistič nebo chránič vypne v předepsaném čase.</li>
+    <li><b>Dvojitá nebo zesílená izolace</b>: spotřebiče třídy II.</li>
+    <li><b>Elektrické oddělení</b>: oddělovací transformátor napájí jeden spotřebič. Obvod nemá spojení se zemí, takže dotyk jednoho vodiče neuzavře obvod.</li>
+    <li><b>Malé napětí SELV a PELV</b>: do 50 V AC / 120 V DC z bezpečnostního zdroje. SELV není uzemněno, PELV je uzemněno.</li>
+  </ol>
+  <p><b>Doplňková ochrana</b> se přidává k normální ochraně pro případ, že selže, nebo pro neopatrnost uživatele: proudový chránič s <span class="code">IΔn ≤ 30 mA</span> a doplňující ochranné pospojování (koupelny).</p>
+  <h3>Doby odpojení (koncové obvody do 32 A)</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Síť, U0</th><th>Koncový obvod</th><th>Distribuční obvod</th></tr></thead>
+    <tbody>
+      <tr><td>TN 230 V</td><td class="n">0,4 s</td><td class="n">5 s</td></tr>
+      <tr><td>TT 230 V</td><td class="n">0,2 s</td><td class="n">1 s</td></tr>
+    </tbody>
+  </table></div>
+  <div class="formula">Podmínka TN:  Zs · Ia ≤ U0      (Zs impedance poruchové smyčky, Ia proud zajišťující vypnutí v předepsaném čase)
+Podmínka TT:  RA · IΔn ≤ 50 V   (RA odpor zemniče + PE)</div>
+  <h3>Proudový chránič (RCD)</h3>
+  <p>Fázové vodiče i N procházejí <b>součtovým transformátorem proudu</b>. Za normálního stavu je součet proudů nulový. Když část proudu odtéká mimo, přes PE nebo přes člověka do země, vznikne rozdíl. Ten indukuje napětí v sekundárním vinutí a chránič vypne.</p>
+  <ul>
+    <li>Vybavovací rozdílový proud <span class="code">IΔn</span>: 10, 30 mA (ochrana osob), 100, 300, 500 mA (ochrana před požárem). Chránič musí vybavit mezi 0,5 a 1 × IΔn. Obecný typ vypne při IΔn do 300 ms.</li>
+    <li>Typy: <b>AC</b> jen sinusový proud · <b>A</b> i pulzující stejnosměrný (dnes standard) · <b>F</b> pro frekvenční měniče v 1f · <b>B</b> i hladký stejnosměrný (nabíječky EV, FV měniče, 3f měniče).</li>
+    <li>Chránič <b>nechrání</b> proti přetížení ani zkratu. To umí jen kombinovaný chránič s jističem (RCBO). Nechrání ani při dotyku L a N současně, protože proud nikam neodtéká.</li>
+    <li>Za chráničem nesmí být vodič PEN, N se nesmí za chráničem spojit s PE a N za chráničem se nesmí sdílet s jiným obvodem.</li>
+    <li>Testovací tlačítko „T“ mačká uživatel pravidelně podle návodu výrobce (obvykle jednou za měsíc až půl roku).</li>
+  </ul>
+  <h3>Třídy ochrany spotřebičů</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Třída</th><th>Princip</th><th>Značka / poznámka</th></tr></thead>
+    <tbody>
+      <tr><td class="n">0</td><td>jen základní izolace, bez PE</td><td>v ČR se pro nová zařízení nepoužívá</td></tr>
+      <tr><td class="n">I</td><td>základní izolace + neživé části spojeny s PE</td><td>svorka ⏚, vidlice s ochranným kontaktem</td></tr>
+      <tr><td class="n">II</td><td>dvojitá nebo zesílená izolace, PE se nepřipojuje</td><td>značka dvojitý čtverec ▣</td></tr>
+      <tr><td class="n">III</td><td>napájení malým napětím SELV/PELV</td><td>značka kosočtverec s III</td></tr>
+    </tbody>
+  </table></div>
+</div>
+<div class="lesson-body" data-lesson="k4" hidden>
+  <div class="k-head"><span class="k-num">4</span><h2>Jištění a kladení vedení</h2></div>
+  <p class="how">Kritéria: dimenzování vedení · ochrana proti nadproudům · zásady kladení · připojování přístrojů a zásuvek · pohyblivé přívody</p>
+  <h3>Dimenzování vedení: čtyři hlediska</h3>
+  <ol>
+    <li><b>Proudová zatížitelnost</b> Iz (ČSN 33 2000-5-52). Záleží na způsobu uložení, teplotě okolí a seskupení. Více kabelů vedle sebe nebo vyšší teplota zatížitelnost snižují.</li>
+    <li><b>Úbytek napětí</b>: doporučeno do 3 % u světelných a do 5 % u ostatních obvodů.</li>
+    <li><b>Zkratová odolnost</b>: vodič musí vydržet zkratový proud, než ochrana vypne.</li>
+    <li><b>Mechanická pevnost</b>: minimální průřezy, pevné uložení Cu nejméně 1,5 mm².</li>
+  </ol>
+  <div class="formula">Koordinace vedení a jištění (ochrana proti přetížení):
+  IB ≤ In ≤ Iz      IB proud obvodu, In jmenovitý proud jističe, Iz zatížitelnost vedení
+  I2 ≤ 1,45 · Iz    I2 proud zaručující zapůsobení ochrany</div>
+  <div class="tbl"><table>
+    <thead><tr><th>Typický obvod v bytě (Cu)</th><th>Průřez</th><th>Jistič</th></tr></thead>
+    <tbody>
+      <tr><td>Světelný obvod</td><td class="n">1,5 mm²</td><td class="n">B10</td></tr>
+      <tr><td>Zásuvkový obvod</td><td class="n">2,5 mm²</td><td class="n">B16</td></tr>
+      <tr><td>Samostatný obvod (pračka, myčka)</td><td class="n">2,5 mm²</td><td class="n">B16</td></tr>
+      <tr><td>Sporák 3f</td><td class="n">2,5–4 mm²</td><td class="n">B16–B20 3f</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Jističe a pojistky</h3>
+  <ul>
+    <li><b>Tepelná spoušť</b> (bimetal) chrání před <b>přetížením</b>. Reaguje se zpožděním, které je tím delší, čím menší je nadproud.</li>
+    <li><b>Elektromagnetická spoušť</b> chrání před <b>zkratem</b> a vypíná okamžitě.</li>
+    <li>Vypínací charakteristiky (násobky In pro okamžité vypnutí): <b>B</b> 3–5× (domovní obvody) · <b>C</b> 5–10× (motory, svítidla s velkým záběrem) · <b>D</b> 10–20× (transformátory, velké motory).</li>
+    <li>Pojistky: <b>gG</b> celorozsahová pro vedení · <b>aM</b> jen zkratová, pro motory (přetížení hlídá tepelné relé).</li>
+    <li><b>Selektivita</b>: při poruše vypne jen ochrana nejblíž poruše, předřazená zůstane zapnutá.</li>
+  </ul>
+  <div class="ex"><div class="t">Praktická ukázka · úbytek napětí</div>
+    <p>Jednofázový obvod, Cu 2,5 mm², délka trasy 25 m, proud 16 A.</p>
+    <pre>R = 2 · ρ · l / S = 2 · 0,0178 · 25 / 2,5 = 0,356 Ω   (×2 = tam i zpět, L a N)
+ΔU = I · R = 16 · 0,356 = 5,7 V
+ΔU % = 5,7 / 230 · 100 = 2,5 %   → vyhovuje (limit 5 %)</pre>
+  </div>
+  <h3>Kladení vedení a připojování přístrojů</h3>
+  <ul>
+    <li>Vedení ve zdi vede <b>vodorovně nebo svisle</b> v instalačních zónách (ČSN 33 2130), nikdy šikmo. Vodorovné zóny jsou pod stropem a nad podlahou, svislé podél rohů, oken a dveří.</li>
+    <li>Spoje dělejte jen svorkami (bezšroubové, šroubové) v krabicích, které zůstanou přístupné. Kroucení vodičů je nepřípustné.</li>
+    <li>Cu a Al nespojujte přímo (galvanická koroze). Použijte svorky schválené pro Cu-Al.</li>
+    <li><b>Vypínač vždy spíná fázový vodič</b>, nikdy N.</li>
+    <li><b>Zásuvka</b> (ČSN 33 2180): ochranný kolík nahoře, fázový vodič na <b>levou</b> dutinku při pohledu zepředu, N na pravou.</li>
+    <li><b>Objímka E27</b>: fáze na středový (patní) kontakt, N na závit, aby se při výměně žárovky nedalo dotknout fáze.</li>
+  </ul>
+  <h3>Pohyblivé přívody</h3>
+  <ul>
+    <li>Označení <span class="code">H05VV-F 3G1,5</span>: H = harmonizovaný, 05 = 300/500 V, V = PVC izolace, V = PVC plášť, F = jemně slaněné (ohebné) jádro, 3G = 3 žíly včetně zelenožluté, 1,5 mm².</li>
+    <li>Lehké namáhání: H03VV-F / H05VV-F. Venku a na stavbě: <b>H07RN-F</b> (pryž, 450/750 V).</li>
+    <li>Ve vidlici a spotřebiči musí být <b>odlehčení tahu</b> a ochrana proti zkroucení. Ochranný vodič nechte <b>delší</b>, aby se při vytržení odpojil jako poslední.</li>
+    <li>Na konce lanka nasaďte lisovací dutinky. Nikdy je necínujte do šroubové svorky, protože cín teče a spoj se uvolní.</li>
+  </ul>
+</div>
+<div class="lesson-body" data-lesson="k5" hidden>
+  <div class="k-head"><span class="k-num">5</span><h2>Ochrana před bleskem a přepětím (LPS)</h2></div>
+  <p class="how">Kritéria: škody způsobené bleskem a princip LPS · ochrana citlivých prvků před elektromagnetickým impulzem. Normy ČSN EN 62305-1 až -4.</p>
+  <ul>
+    <li><b>Škody</b>: úraz živých bytostí dotykovým a krokovým napětím · fyzické škody (požár, výbuch, mechanické poškození) · poruchy elektrických a elektronických systémů vlivem LEMP (elektromagnetický impulz blesku).</li>
+    <li><b>Vnější LPS</b> zachytí výboj a bezpečně ho svede do země: <b>jímací soustava</b> (tyče, vodiče, mřížová soustava) → <b>svody</b> → <b>uzemňovací soustava</b> (doporučeno do 10 Ω).</li>
+    <li><b>Vnitřní LPS</b> zabraňuje nebezpečnému jiskření uvnitř objektu: <b>vyrovnání potenciálů</b> (pospojování, SPD) a dodržení <b>dostatečné vzdálenosti s</b> mezi LPS a instalacemi.</li>
+  </ul>
+  <div class="tbl"><table>
+    <thead><tr><th>Třída LPS</th><th>Valivá koule</th><th>Oka mřížové soustavy</th><th>Typická vzdálenost svodů</th></tr></thead>
+    <tbody>
+      <tr><td class="n">I</td><td class="n">20 m</td><td class="n">5 × 5 m</td><td class="n">10 m</td></tr>
+      <tr><td class="n">II</td><td class="n">30 m</td><td class="n">10 × 10 m</td><td class="n">10 m</td></tr>
+      <tr><td class="n">III</td><td class="n">45 m</td><td class="n">15 × 15 m</td><td class="n">15 m</td></tr>
+      <tr><td class="n">IV</td><td class="n">60 m</td><td class="n">20 × 20 m</td><td class="n">20 m</td></tr>
+    </tbody>
+  </table></div>
+  <p>Jímače se navrhují metodou <b>valivé koule</b>, <b>ochranného úhlu</b> nebo <b>mřížové soustavy</b>. Třída I je nejpřísnější.</p>
+  <h3>Ochrana citlivých prvků: zóny LPZ a SPD</h3>
+  <ul>
+    <li><b>LPZ 0A</b> přímé údery a plné pole · <b>LPZ 0B</b> chráněno před přímým úderem, plné pole · <b>LPZ 1, 2…</b> uvnitř budovy, proudy i pole jsou postupně tlumené. Na každém rozhraní zón se pospojuje a osazují se SPD.</li>
+    <li><b>SPD typ 1</b> (dříve B, vlna 10/350 µs): na vstupu do objektu s vnějším LPS, svádí část bleskového proudu.</li>
+    <li><b>SPD typ 2</b> (dříve C, vlna 8/20 µs): v podružných rozvaděčích.</li>
+    <li><b>SPD typ 3</b> (dříve D): jemná ochrana u koncových zařízení (zásuvkové adaptéry, lišty), nejvýše 5–10 m od chráněného přístroje.</li>
+    <li>Další opatření: stínění kabelů a místností, vhodné trasy vedení (bez velkých smyček), společné pospojování všech sítí (silová, datová, anténa, potrubí).</li>
+  </ul>
+</div>
+<div class="lesson-body" data-lesson="k6" hidden>
+  <div class="k-head"><span class="k-num">6</span><h2>Technická dokumentace a normy</h2></div>
+  <p class="how">Kritéria: druhy dokumentace · schematické značky (praktické předvedení a ústně)</p>
+  <ul>
+    <li><b>Projektová dokumentace</b>: technická zpráva, výkresy, výpočty, rozpočet.</li>
+    <li><b>Přehledové (blokové) schéma</b>: zjednodušeně ukazuje strukturu (rozvaděče, napájení).</li>
+    <li><b>Obvodové (elektrické) schéma</b>: úplné zapojení všech prvků. Podle něj se zapojuje a hledají závady.</li>
+    <li><b>Instalační (dispoziční) výkres</b>: půdorys s polohou zásuvek, vypínačů, svítidel a tras.</li>
+    <li><b>Dokumentace skutečného provedení</b>: zachycuje, jak byla instalace opravdu provedena, včetně změn proti projektu.</li>
+    <li><b>Návody výrobce</b>, <b>revizní zprávy</b>, <b>místní provozní bezpečnostní předpis</b> (vydává provozovatel), protokoly o kontrolách.</li>
+  </ul>
+  <p><b>Normy.</b> České technické normy (ČSN) jsou <b>obecně nezávazné</b>, pokud jejich závaznost nestanoví právní předpis. Kdo podle nich postupuje, má výhodu, že se má za to, že splnil technické požadavky. Značení ČSN EN = převzatá evropská norma, ČSN EN IEC = mezinárodní. Grafické značky se řídí <b>ČSN EN 60617</b>.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Řazení vypínače</th><th>Název</th><th>Použití</th></tr></thead>
+    <tbody>
+      <tr><td class="n">1</td><td>jednopólový</td><td>jedno svítidlo z jednoho místa</td></tr>
+      <tr><td class="n">2</td><td>dvoupólový</td><td>odpojí L i N (např. bojler)</td></tr>
+      <tr><td class="n">5</td><td>sériový (lustrový)</td><td>dvě skupiny svítidel z jednoho místa</td></tr>
+      <tr><td class="n">6</td><td>střídavý (schodišťový)</td><td>jedno svítidlo ze dvou míst (2× č. 6)</td></tr>
+      <tr><td class="n">7</td><td>křížový</td><td>vkládá se mezi dva č. 6 pro třetí a další místo</td></tr>
+      <tr><td class="n">1/0</td><td>tlačítko</td><td>ovládání impulzního nebo schodišťového relé, zvonek</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Značka ve schématu</th><th>Význam</th></tr></thead>
+    <tbody>
+      <tr><td>kroužek s písmenem M a „3~“</td><td>trojfázový motor</td></tr>
+      <tr><td>obdélník s vývody A1, A2</td><td>cívka stykače nebo relé</td></tr>
+      <tr><td>obdélník s čárou uvnitř po délce</td><td>pojistka</td></tr>
+      <tr><td>svislá čára se třemi zkracujícími se vodorovnými</td><td>uzemnění</td></tr>
+      <tr><td>dva prolínající se kroužky</td><td>transformátor</td></tr>
+      <tr><td>kroužek s křížem</td><td>svítidlo (světelný vývod)</td></tr>
+      <tr><td>půlkruh s čárkou nahoru</td><td>zásuvka s ochranným kontaktem</td></tr>
+      <tr><td>písmena: F, Q, K, S, M, X</td><td>jisticí prvek, vypínač/jistič, stykač/relé, tlačítko/spínač, motor, svorkovnice</td></tr>
+    </tbody>
+  </table></div>
+</div>
+<div class="lesson-body" data-lesson="k7" hidden>
+  <div class="k-head"><span class="k-num">7</span><h2>Měření elektrických veličin</h2></div>
+  <p class="how">Kritéria: měření a vyhodnocení · volba metody a přístroje (praktické předvedení). U zkoušky stačí jedna metoda: multimetr, klešťový ampérmetr, wattmetr, ohmmetr, měřič izolace nebo měřič impedance smyčky.</p>
+  <ul>
+    <li><b>Ampérmetr</b> se zapojuje <b>do série</b> a má co nejmenší vnitřní odpor. <b>Voltmetr</b> se zapojuje <b>paralelně</b> a má co největší vnitřní odpor.</li>
+    <li>U neznámé hodnoty začněte na <b>nejvyšším rozsahu</b>. Ohmmetrem a zkoušečkou spojitosti měřte jen bez napětí.</li>
+    <li><b>Klešťový ampérmetr</b>: obejměte <b>jediný vodič</b>. Kabel L+N dohromady ukáže nulu, protože proudy se odečtou. Toho se využívá při měření unikajícího proudu.</li>
+    <li><b>Wattmetr</b>: proudová cívka v sérii, napěťová paralelně. Ve 3f soustavě: 1 wattmetr × 3 při souměrné zátěži · 2 wattmetry (Aronovo zapojení) ve 3vodičové soustavě · 3 wattmetry ve 4vodičové soustavě s nesouměrnou zátěží.</li>
+    <li>Kategorie přístroje: <b>CAT II</b> spotřebiče a zásuvky · <b>CAT III</b> pevná instalace a rozvaděče · <b>CAT IV</b> přípojka a elektroměr. Přístroj musí mít kategorii nejméně takovou, jakou má místo měření.</li>
+  </ul>
+  <h3>Měření v instalaci (ČSN 33 2000-6)</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Měření</th><th>Jak</th><th>Mez</th></tr></thead>
+    <tbody>
+      <tr><td>Spojitost ochranných vodičů</td><td>zdroj 4–24 V, proud ≥ 200 mA</td><td>co nejnižší, porovnat s výpočtem</td></tr>
+      <tr><td>Izolační odpor, obvod SELV/PELV</td><td class="n">250 V DC</td><td class="n">≥ 0,5 MΩ</td></tr>
+      <tr><td>Izolační odpor, obvod do 500 V (230/400 V)</td><td class="n">500 V DC</td><td class="n">≥ 1 MΩ</td></tr>
+      <tr><td>Izolační odpor, obvod nad 500 V</td><td class="n">1000 V DC</td><td class="n">≥ 1 MΩ</td></tr>
+      <tr><td>Impedance poruchové smyčky</td><td>měřič smyčky L-PE</td><td>Zs ≤ U0 / Ia</td></tr>
+      <tr><td>Proudový chránič</td><td>vybavovací proud a čas</td><td class="n">0,5–1 IΔn; ≤ 300 ms při IΔn</td></tr>
+    </tbody>
+  </table></div>
+  <p>Izolační odpor měříte <b>na vypnutém obvodu</b> s odpojenými spotřebiči (elektroniku by měřicí napětí poškodilo) a stejnosměrným napětím mezi vodiči navzájem a proti PE.</p>
+  <div class="ex"><div class="t">Praktická ukázka · vyhoví impedance smyčky?</div>
+    <p>Zásuvkový obvod B16 v síti TN 230 V. Naměřeno Zs = 1,2 Ω.</p>
+    <pre>Ia (char. B) = 5 · In = 5 · 16 = 80 A
+Zs,max = U0 / Ia = 230 / 80 = 2,87 Ω
+s rezervou na oteplení vodičů (× 2/3) ≈ 1,92 Ω
+1,2 Ω &lt; 1,92 Ω   → vyhovuje, jistič vypne včas</pre>
+  </div>
+  <div class="ex"><div class="t">Praktická ukázka · síť TT s chráničem 30 mA</div>
+    <pre>RA ≤ 50 V / IΔn = 50 / 0,03 = 1667 Ω   → s chráničem 30 mA vyhoví i horší zemnič</pre>
+  </div>
+</div>
+<div class="lesson-body" data-lesson="k8" hidden>
+  <div class="k-head"><span class="k-num">8</span><h2>Montáž a zapojování</h2></div>
+  <p class="how">Kritéria: úprava konců vodičů a svazků · technologický postup · nářadí a materiál · zhotovení podle zadání · ověření funkce · demontáž a sestavení mechanismu</p>
+  <h3>Obecný technologický postup</h3>
+  <ol>
+    <li>Prostudujte zadání a schéma, připravte materiál a nářadí (izolované šroubováky, kleště, odizolovač, krimpovací kleště, dutinky, zkoušečka, multimetr).</li>
+    <li>Pracoviště vypněte a zajistěte podle pěti pravidel.</li>
+    <li>Upevněte přístroje a krabice, uložte vedení v zónách.</li>
+    <li>Odizolujte na délku podle svorky (obvykle 8–11 mm, bez naříznutí jádra). Na lanka nalisujte dutinky. Vodiče ve svazku veďte souběžně a vázejte páskou.</li>
+    <li>Zapojte podle schématu a dotáhněte svorky předepsaným momentem.</li>
+    <li>Před zapnutím: vizuální kontrola, spojitost PE, izolační odpor.</li>
+    <li>Zapněte, ověřte funkci, polaritu zásuvek a chránič (tlačítko T i měřením).</li>
+    <li>Uklidíte pracoviště a předáte výsledek se záznamem.</li>
+  </ol>
+  <h3>Typické úlohy u zkoušky</h3>
+  <div class="ex"><div class="t">Schodišťové zapojení (2× řazení 6)</div>
+    <ol>
+      <li>Fázi L z jističe přiveďte na <b>společnou svorku</b> (L) prvního přepínače č. 6.</li>
+      <li>Dva <b>přepínací vodiče</b> spojte svorky 1–1 a 2–2 obou přepínačů.</li>
+      <li>Ze společné svorky druhého přepínače veďte vodič ke svítidlu (střed objímky).</li>
+      <li>N a PE veďte ke svítidlu přímo, nespínají se.</li>
+      <li>Pro třetí místo vložte mezi přepínací vodiče křížový přepínač č. 7.</li>
+    </ol>
+  </div>
+  <div class="grid2">
+    <figure>
+      <svg viewBox="0 0 300 170" width="100%" role="img" aria-label="Svorkovnice motoru zapojená do hvězdy">
+        <text x="10" y="20" font-size="14">Hvězda Y</text>
+        <g font-size="13">
+          <text x="58" y="45">L1</text><text x="138" y="45">L2</text><text x="218" y="45">L3</text>
+          <circle class="s-term" cx="65" cy="70" r="13"/><circle class="s-term" cx="145" cy="70" r="13"/><circle class="s-term" cx="225" cy="70" r="13"/>
+          <text x="55" y="75">U1</text><text x="135" y="75">V1</text><text x="215" y="75">W1</text>
+          <path class="s-br" d="M65 125 H225"/>
+          <circle class="s-term" cx="65" cy="125" r="13"/><circle class="s-term" cx="145" cy="125" r="13"/><circle class="s-term" cx="225" cy="125" r="13"/>
+          <text x="55" y="130">W2</text><text x="136" y="130">U2</text><text x="216" y="130">V2</text>
+        </g>
+        <text x="10" y="162" font-size="12">spojky vodorovně v dolní řadě</text>
+      </svg>
+      <figcaption>Svorkovnice: horní řada U1 V1 W1, dolní posunutá W2 U2 V2. Do hvězdy se spojí celá dolní řada.</figcaption>
+    </figure>
+    <figure>
+      <svg viewBox="0 0 300 170" width="100%" role="img" aria-label="Svorkovnice motoru zapojená do trojúhelníku">
+        <text x="10" y="20" font-size="14">Trojúhelník Δ</text>
+        <g font-size="13">
+          <text x="58" y="45">L1</text><text x="138" y="45">L2</text><text x="218" y="45">L3</text>
+          <path class="s-br" d="M65 70 V125 M145 70 V125 M225 70 V125"/>
+          <circle class="s-term" cx="65" cy="70" r="13"/><circle class="s-term" cx="145" cy="70" r="13"/><circle class="s-term" cx="225" cy="70" r="13"/>
+          <text x="55" y="75">U1</text><text x="135" y="75">V1</text><text x="215" y="75">W1</text>
+          <circle class="s-term" cx="65" cy="125" r="13"/><circle class="s-term" cx="145" cy="125" r="13"/><circle class="s-term" cx="225" cy="125" r="13"/>
+          <text x="55" y="130">W2</text><text x="136" y="130">U2</text><text x="216" y="130">V2</text>
+        </g>
+        <text x="10" y="162" font-size="12">spojky svisle: U1-W2, V1-U2, W1-V2</text>
+      </svg>
+      <figcaption>Do trojúhelníku se spojí svisle tři páry.</figcaption>
+    </figure>
+  </div>
+  <div class="ex"><div class="t">Připojení asynchronního motoru</div>
+    <ul>
+      <li>Štítek <b>230/400 V Δ/Y</b>, síť 3×400 V → zapojit do <b>hvězdy</b> (každé vinutí dostane 230 V).</li>
+      <li>Štítek <b>400/690 V Δ/Y</b>, síť 3×400 V → zapojit do <b>trojúhelníku</b>. Takový motor lze spouštět přepínačem Y/Δ, který sníží záběrový proud na 1/3.</li>
+      <li>Záběrový proud bývá 4–8× In. Proto se jistí charakteristikou C nebo D, popřípadě motorovým spouštěčem.</li>
+      <li><b>Změna směru otáčení:</b> prohoďte <b>dvě fáze</b> přívodu.</li>
+      <li>Kostru motoru připojte na PE.</li>
+    </ul>
+  </div>
+  <figure>
+    <svg viewBox="0 0 520 250" width="100%" role="img" aria-label="Ovládací obvod stykače s přídržným kontaktem">
+      <g font-size="12">
+        <text x="12" y="22">L</text><path class="s-line" d="M30 18 H500"/>
+        <text x="12" y="238">N</text><path class="s-line" d="M30 234 H500"/>
+        <path class="s-line" d="M80 18 V48"/>
+        <rect class="s-term" x="66" y="48" width="28" height="22" rx="2"/><text x="100" y="64">F2 95-96 tepelné relé (NC)</text>
+        <path class="s-line" d="M80 70 V92"/>
+        <path class="s-line" d="M80 92 L70 108"/><path class="s-line" d="M68 104 H92"/><path class="s-line" d="M80 112 V130"/>
+        <text x="100" y="108">S1 STOP 1-2 (NC)</text>
+        <path class="s-line" d="M80 130 H200 M80 130 V140 M200 130 V140"/>
+        <path class="s-line" d="M80 140 L94 156 M80 160 V172"/><text x="16" y="156">S2 START</text><text x="16" y="170">3-4 (NO)</text>
+        <path class="s-line" d="M200 140 L214 156 M200 160 V172"/><text x="222" y="156">K1 13-14 přídržný (NO)</text>
+        <path class="s-line" d="M80 172 H200 M140 172 V188"/>
+        <rect class="s-term" x="122" y="188" width="36" height="24" rx="2"/><text x="166" y="204">K1 cívka A1-A2</text>
+        <path class="s-line" d="M140 212 V234"/>
+      </g>
+    </svg>
+    <figcaption>Ovládací obvod stykače: STOP je rozpínací tlačítko v sérii, START je spínací. Paralelně ke START je přídržný kontakt K1 13-14, takže stykač po puštění START drží. Kontakt tepelného relé 95-96 při přetížení cívku odpojí. U reverzace se do série s cívkou každého stykače přidá rozpínací kontakt druhého stykače (blokování).</figcaption>
+  </figure>
+  <p><b>Demontáž a sestavení mechanismu</b> (např. vypínač, motor, ventilátor): fotografujte a značte si polohu dílů, odkládejte je v pořadí demontáže, zkontrolujte opotřebení (ložiska, kartáče, kontakty), po sestavení ověřte volný chod a nakonec změřte PE a izolaci.</p>
+</div>
+<div class="lesson-body" data-lesson="k9" hidden>
+  <div class="k-head"><span class="k-num">9</span><h2>Kontroly a opravy spotřebičů</h2></div>
+  <p class="how">Kritéria: kontrola spotřebiče · oprava · ověření bezpečnosti po opravě · protokol · poučení zákazníka. Normy: ČSN EN 50678 (po opravě), ČSN EN 50699 (opakované kontroly), dříve ČSN 33 1600 ed. 2 a ČSN 33 1610.</p>
+  <h3>Postup kontroly</h3>
+  <ol>
+    <li><b>Prohlídka</b>: přívod (praskliny, zlomy u vidlice), vidlice, vývodka a odlehčení tahu, kryt, štítek, nápisy, pojistky, větrací otvory, stopy přehřátí.</li>
+    <li><b>Měření</b>: odpor ochranného vodiče (třída I), izolační odpor, unikající nebo dotykový proud.</li>
+    <li><b>Funkční zkouška</b>: spínače, ochrany, chod.</li>
+    <li><b>Vyhodnocení a záznam</b>. Nevyhovující spotřebič označte, vyřaďte z užívání a informujte uživatele.</li>
+  </ol>
+  <div class="tbl"><table>
+    <thead><tr><th>Měření (ČSN EN 50678 / 50699)</th><th>Mezní hodnota</th></tr></thead>
+    <tbody>
+      <tr><td>Odpor ochranného vodiče (přívod do 5 m)</td><td class="n">≤ 0,3 Ω (+0,1 Ω na každých dalších 7,5 m, max. 1 Ω)</td></tr>
+      <tr><td>Izolační odpor, třída I</td><td class="n">≥ 1 MΩ (s topnými články 0,3 MΩ)</td></tr>
+      <tr><td>Izolační odpor, třída II</td><td class="n">≥ 2 MΩ</td></tr>
+      <tr><td>Izolační odpor, třída III</td><td class="n">≥ 0,25 MΩ</td></tr>
+      <tr><td>Proud ochranným vodičem, třída I</td><td class="n">≤ 3,5 mA</td></tr>
+      <tr><td>Dotykový proud, třída II</td><td class="n">≤ 0,5 mA</td></tr>
+    </tbody>
+  </table></div>
+  <p class="how">Hodnoty jsou běžně uváděné mezní hodnoty těchto norem. U zkoušky se řiďte normou, kterou má autorizovaná osoba k dispozici.</p>
+  <h3>Oprava a protokol</h3>
+  <ul>
+    <li>Vadný přívod vyměňte za <b>stejný nebo odolnější typ</b>, stejného průřezu, s odlehčením tahu. PE nechte delší.</li>
+    <li>Nahrazujte díly původními nebo rovnocennými. Bezpečnostní prvky (tepelné pojistky, termostaty) nikdy nevyřazujte.</li>
+    <li><b>Protokol</b> obsahuje: identifikaci spotřebiče (typ, výrobní číslo, třída ochrany), co bylo opraveno, výsledky měření s mezními hodnotami, použité měřicí přístroje, závěr „spotřebič je / není bezpečný“, datum, jméno a podpis.</li>
+    <li><b>Poučení zákazníka</b>: co bylo opraveno, jak spotřebič bezpečně používat, na co si dát pozor (poškozený přívod, voda) a kdy je další kontrola.</li>
+  </ul>
+</div>
+<div class="lesson-body" data-lesson="k10" hidden>
+  <div class="k-head"><span class="k-num">10</span><h2>První pomoc při úrazu elektřinou</h2></div>
+  <p class="how">Kritéria: účinky proudu na organismus · poskytnutí první pomoci (ústně)</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Střídavý proud 50 Hz</th><th>Účinek</th></tr></thead>
+    <tbody>
+      <tr><td class="n">≈ 0,5 mA</td><td>práh vnímání</td></tr>
+      <tr><td class="n">≈ 10 mA</td><td>práh odpoutání: křeč svalů, člověk nemůže pustit vodič</td></tr>
+      <tr><td class="n">desítky mA (≈ 30–50 mA a více)</td><td>při delším působení fibrilace srdečních komor, zástava dýchání</td></tr>
+    </tbody>
+  </table></div>
+  <p>Účinky: <b>tepelné</b> (popáleniny, i vnitřní), <b>elektrolytické</b> (rozklad tělních tekutin), <b>biologické</b> (křeče, poruchy srdečního rytmu). Nebezpečnost roste s velikostí proudu, dobou působení a dráhou přes srdce (ruka – ruka, levá ruka – nohy).</p>
+  <h3>Postup</h3>
+  <ol>
+    <li><b>Vlastní bezpečnost.</b> Přerušte proud: vypněte jistič, vytáhněte vidlici. U NN, pokud nejde vypnout, odsuňte vodič nevodivým předmětem (suché dřevo) a stůjte na izolační podložce.</li>
+    <li><b>VN:</b> nepřibližujte se (krokové napětí). Volejte a počkejte, až provozovatel zařízení vypne.</li>
+    <li>Volejte <b>155</b> (nebo 112).</li>
+    <li>Zkontrolujte vědomí a dýchání. Když postižený nedýchá normálně, zahajte <b>KPR</b>: 30 stlačení hrudníku (hloubka 5–6 cm, tempo 100–120/min) a 2 vdechy. Laik může jen stlačovat. Pokud je k dispozici, použijte <b>AED</b>.</li>
+    <li>Popáleniny chlaďte čistou vodou a sterilně překryjte. Puchýře nepropichujte.</li>
+    <li>Po úrazu elektřinou musí postižený <b>vždy k lékaři</b>, i když nemá potíže. Poruchy srdečního rytmu se mohou objevit později.</li>
+  </ol>
+</div>
+<div class="lesson-body" data-lesson="nv" hidden>
+  <div class="k-head"><span class="k-num">§</span><h2>Nařízení vlády 194/2022 Sb.</h2></div>
+  <p>„O požadavcích na odbornou způsobilost k výkonu činnosti na elektrických zařízeních a na odbornou způsobilost v elektrotechnice“. Platí od <b>1. 7. 2022</b>, nahradilo vyhlášku 50/1978 Sb. Prováděcí předpis k <b>zákonu 250/2021 Sb.</b> o bezpečnosti práce v souvislosti s provozem vyhrazených technických zařízení. Vyhrazená elektrická zařízení upravuje NV 190/2022 Sb.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>§</th><th>Kategorie</th><th>Co smí / požadavky</th></tr></thead>
+    <tbody>
+      <tr><td class="n">§ 4</td><td>Osoba poučená</td><td>Poučena o činnosti a znalosti ověřeny (zápis vyhotoví osoba znalá). Smí samostatně obsluhovat zařízení bez omezení napětí (dotýkat se jen částí určených k obsluze), pracovat podle pokynů na zařízení bez napětí a s dohledem v blízkosti živých částí NN.</td></tr>
+      <tr><td class="n">§ 5</td><td>Osoba znalá</td><td>Tři druhy: a) elektrotechnik, b) vedoucí elektrotechnik, c) revizní technik. Činnost v rozsahu dokladu o zkoušce.</td></tr>
+      <tr><td class="n">§ 6</td><td>Elektrotechnik (osoba znalá pro samostatnou činnost)</td><td>Odborná kvalifikace (elektrotechnické vzdělání). Praxi stanoví odpovědná osoba v místním předpisu. Bez praxe: dohled osoby znalé s praxí ≥ 2 roky po dobu ≥ 1 roku. Profesní kvalifikace může nahradit vzdělání jen do 1 kV AC / 1,5 kV DC bez nebezpečí výbuchu (odst. 7).</td></tr>
+      <tr><td class="n">§ 7</td><td>Vedoucí elektrotechnik (osoba znalá pro řízení činnosti)</td><td>Praxe: 2 roky (E2A, E3A), 3 roky (E1A, E2B, E3B), 4 roky (E1B). Z toho ≥ 1 rok na zařízení příslušného druhu.</td></tr>
+      <tr><td class="n">§ 8</td><td>Revizní technik</td><td>Platné osvědčení, splňuje § 7 a praxi podle odst. 2 (např. 4 roky pro E1A, E2A).</td></tr>
+      <tr><td class="n">§ 9</td><td>Zkouška a školení</td><td>Zkouška má 2 části: <b>písemný test (min. 10 otázek)</b> a <b>ústní pohovor</b>. Tříčlenná komise, předseda je revizní technik. Protokol se uchovává 6–7 let.</td></tr>
+      <tr><td class="n">§ 10</td><td>Přechodné ustanovení</td><td>Pracovník znalý a znalý pro samostatnou činnost (§ 5, 6 staré vyhl.) = elektrotechnik. Pracovník pro řízení činnosti, dodavatelským způsobem a řízení provozu = vedoucí elektrotechnik.</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><b>Školení</b> (§ 3 odst. 4): zaměstnavatel zajistí pravidelné školení osob podle § 4, 6 a 7 v intervalech podle vnitřního předpisu. Když vnitřní předpis chybí, <b>nejméně jednou ročně</b>.</li>
+    <li>Rozsah osvědčení se určuje napětím (do 1 kV AC / 1,5 kV DC, nebo bez omezení) a prostředím (bez nebezpečí výbuchu / s nebezpečím).</li>
+    <li>Písmena v rozsahu (E1–E3, A/B) jsou podle přílohy 3 NV 190/2022 Sb.: A = bez nebezpečí výbuchu, B = s nebezpečím výbuchu.</li>
+  </ul>
+</div>
+
+    </div>
+    <div class="panel" id="lesson-quiz"></div>
+    <div class="lnav">
+      <button type="button" id="l-prev">← Předchozí lekce</button>
+      <button type="button" id="l-done" class="primary">Označit lekci jako hotovou</button>
+      <button type="button" id="l-next">Další lekce →</button>
+    </div>
+  </div>
+</div>
+
+<!-- KOTEL -->
+<div class="view" id="v-kotel" hidden>
+  <div class="eyebrow">Plynový kotel</div>
+  <h1>Kondenzační kotel v řezu</h1>
+  <p class="lead">Vyberte součást v seznamu a přečtete si, k čemu slouží a co se na ní měří. Na obrázku se zvýrazní modře.</p>
+  <div class="stage">
+    <div class="drawing">
+      <div class="ctrl" role="group" aria-label="Ukázat provoz">
+        <span class="lbl">Ukázat provoz</span>
+        <button id="m-off" type="button" data-mode="off">Vypnuto</button>
+        <button id="m-heat" type="button" data-mode="heat">Topení</button>
+        <button id="m-dhw" type="button" data-mode="dhw">Teplá voda</button>
+      </div>
+      <div class="quizbar" id="quizbar" hidden>
+        <span>Klikněte na:</span><b id="qname">—</b><span id="qscore" class="lbl"></span>
+        <button id="qend" type="button" style="margin-left:auto">Ukončit kvíz</button>
+      </div>
+<svg id="kotel" viewBox="0 0 600 900" role="img" aria-label="Řez nástěnným kondenzačním kotlem s klikacími součástmi">
+  <rect class="casing" x="50" y="50" width="500" height="780" rx="18"/>
+  <text class="lab" x="300" y="70">kondenzační kotel 24 kW · 230 V / 50 Hz · IPX4D</text>
+
+  <!-- potrubí (vrstva pod součástmi) -->
+  <g id="pipes">
+    <path class="pipe p-air" data-f="air" d="M276 4 V58"/>
+    <path class="pipe p-air" data-f="air" d="M324 4 V58"/>
+    <path class="pipe p-flue" data-f="air" d="M300 142 V0"/>
+    <path class="pipe p-gas" data-f="gas" d="M320 868 V730 H130 V500"/>
+    <path class="pipe p-gas" data-f="gas" d="M130 440 V221"/>
+    <path class="pipe p-mix" data-f="air" d="M172 164 H300 V172"/>
+    <path class="pipe p-hot" data-f="prim" d="M220 390 V540"/>
+    <path class="pipe p-hot" data-f="heat" d="M205 590 V868"/>
+    <path class="pipe p-hot" data-f="dhw" d="M245 575 H300"/>
+    <path class="pipe p-ret" data-f="dhw" d="M360 640 H442"/>
+    <path class="pipe p-ret" data-f="heat" d="M450 868 V640"/>
+    <path class="pipe p-ret" data-f="prim" d="M450 640 V548"/>
+    <path class="pipe p-ret" data-f="prim" d="M450 492 V430 H380 V390"/>
+    <path class="pipe p-ret" d="M472 400 V430 H452"/>
+    <path class="pipe p-ret" d="M450 600 H500"/>
+    <path class="pipe p-ret" d="M450 690 H480"/>
+    <path class="pipe p-cold" data-f="dhw" d="M380 868 V700 H345 V660"/>
+    <path class="pipe p-dhw" data-f="dhw" d="M315 660 V700 H262 V868"/>
+    <path class="pipe p-cond" data-f="flame" d="M340 390 V460 A10 10 0 0 0 360 460 V450 H410 V868"/>
+    <path class="pipe p-cond" d="M509 612 V655"/>
+  </g>
+  <g id="flows"></g>
+
+  <!-- 1 odtah -->
+  <g class="part" data-id="odtah" tabindex="0" role="button" aria-label="Odtah spalin a přívod vzduchu">
+    <rect class="sh" x="262" y="8" width="76" height="52" rx="6" fill-opacity=".35"/>
+    <rect class="sh" x="288" y="0" width="24" height="60"/>
+    <g class="badge"><circle cx="356" cy="30" r="11"/><text x="356" y="30">1</text></g>
+  </g>
+
+  <!-- 5 výměník + 4 hořák -->
+  <g class="part" data-id="vymenik" tabindex="0" role="button" aria-label="Primární kondenzační výměník">
+    <rect class="sh hxbody" x="200" y="140" width="200" height="250" rx="16"/>
+    <g class="coil">
+      <ellipse cx="300" cy="190" rx="88" ry="7"/><ellipse cx="300" cy="214" rx="88" ry="7"/><ellipse cx="300" cy="238" rx="88" ry="7"/>
+      <ellipse cx="300" cy="262" rx="88" ry="7"/><ellipse cx="300" cy="286" rx="88" ry="7"/><ellipse cx="300" cy="310" rx="88" ry="7"/>
+      <ellipse cx="300" cy="334" rx="88" ry="7"/><ellipse cx="300" cy="358" rx="88" ry="7"/>
+    </g>
+    <g class="badge"><circle cx="216" cy="372" r="11"/><text x="216" y="372">5</text></g>
+  </g>
+  <rect class="flame" id="flame" x="261" y="168" width="78" height="138" rx="14"/>
+  <g class="part" data-id="horak" tabindex="0" role="button" aria-label="Premixový hořák">
+    <rect class="sh" x="270" y="174" width="60" height="124" rx="8"/>
+    <path d="M276 190 H324 M276 206 H324 M276 222 H324 M276 238 H324 M276 254 H324 M276 270 H324 M276 286 H324" stroke="var(--metal-d)" stroke-width="1" stroke-dasharray="2 3"/>
+    <g class="badge"><circle cx="300" cy="236" r="11"/><text x="300" y="236">4</text></g>
+  </g>
+
+  <!-- 2 ventilátor -->
+  <g class="part" data-id="ventilator" tabindex="0" role="button" aria-label="Modulovaný ventilátor">
+    <circle class="sh" cx="130" cy="175" r="44"/>
+    <g class="spin" id="fan">
+      <circle cx="130" cy="175" r="34" fill="none" stroke="none"/>
+      <path d="M130 175 L130 145 Q146 152 141 166 Z M130 175 L160 175 Q153 191 139 186 Z M130 175 L130 205 Q114 198 119 184 Z M130 175 L100 175 Q107 159 121 164 Z" fill="var(--metal-d)"/>
+      <circle cx="130" cy="175" r="7" class="ink"/>
+    </g>
+    <g class="badge"><circle cx="82" cy="128" r="11"/><text x="82" y="128">2</text></g>
+  </g>
+
+  <!-- 3 plynový ventil -->
+  <g class="part" data-id="plynventil" tabindex="0" role="button" aria-label="Plynový ventil">
+    <rect class="sh" x="95" y="440" width="70" height="60" rx="6"/>
+    <rect x="103" y="450" width="24" height="18" rx="2" fill="var(--gas)" opacity=".7"/>
+    <rect x="133" y="450" width="24" height="18" rx="2" fill="var(--gas)" opacity=".7"/>
+    <text class="lab" x="130" y="488">V1  V2</text>
+    <g class="badge"><circle cx="82" cy="430" r="11"/><text x="82" y="430">3</text></g>
+  </g>
+
+  <!-- 6 zapalování -->
+  <g class="part" data-id="zapal" tabindex="0" role="button" aria-label="Zapalovací elektroda a zapalovač">
+    <rect class="sh" x="404" y="196" width="28" height="26" rx="3"/>
+    <path d="M404 209 H338" stroke="var(--metal-d)" stroke-width="3"/>
+    <text class="lab" x="418" y="213" style="font-size:9px">kV</text>
+    <g class="badge"><circle cx="418" cy="184" r="11"/><text x="418" y="184">6</text></g>
+  </g>
+  <path class="spark" id="spark" d="M338 203 l-4 4 l4 3 l-4 4"/>
+
+  <!-- 7 ionizace -->
+  <g class="part" data-id="ionizace" tabindex="0" role="button" aria-label="Ionizační elektroda">
+    <circle class="sh" cx="414" cy="255" r="9"/>
+    <path d="M405 255 H338" stroke="var(--metal-d)" stroke-width="3"/>
+    <text class="lab" x="414" y="282" style="font-size:9px">µA</text>
+    <g class="badge"><circle cx="418" cy="232" r="11"/><text x="418" y="232">7</text></g>
+  </g>
+
+  <!-- 15 expanzní nádoba -->
+  <g class="part" data-id="expanzni" tabindex="0" role="button" aria-label="Expanzní nádoba">
+    <rect class="sh" x="440" y="110" width="65" height="290" rx="30"/>
+    <path d="M446 255 H499" stroke="var(--metal-d)" stroke-width="2" stroke-dasharray="5 4"/>
+    <text class="lab" x="472" y="190">N₂</text><text class="lab" x="472" y="320">H₂O</text>
+    <g class="badge"><circle cx="472" cy="140" r="11"/><text x="472" y="140">15</text></g>
+  </g>
+
+  <!-- 8 STB -->
+  <g class="part" data-id="stb" tabindex="0" role="button" aria-label="Havarijní termostat">
+    <rect class="sh" x="228" y="404" width="26" height="20" rx="3"/>
+    <g class="badge"><circle cx="268" cy="414" r="11"/><text x="268" y="414">8</text></g>
+  </g>
+
+  <!-- 9 NTC čidla -->
+  <g class="part" data-id="ntc" tabindex="0" role="button" aria-label="Teplotní čidla NTC">
+    <circle class="sh" cx="232" cy="470" r="7"/>
+    <circle class="sh" cx="428" cy="430" r="7"/>
+    <circle class="sh" cx="303" cy="700" r="7"/>
+    <g class="badge"><circle cx="252" cy="470" r="11"/><text x="252" y="470">9</text></g>
+  </g>
+
+  <!-- 18 sifon -->
+  <g class="part" data-id="sifon" tabindex="0" role="button" aria-label="Sifon kondenzátu">
+    <path class="sh" d="M334 440 h12 v20 a4 4 0 0 0 8 0 v-10 h12 v10 a16 16 0 0 1 -32 0 Z"/>
+    <g class="badge"><circle cx="384" cy="472" r="11"/><text x="384" y="472">18</text></g>
+  </g>
+
+  <!-- 10 čerpadlo -->
+  <g class="part" data-id="cerpadlo" tabindex="0" role="button" aria-label="Oběhové čerpadlo">
+    <circle class="sh" cx="450" cy="520" r="28"/>
+    <g class="spin" id="pump"><path d="M450 500 V540 M430 520 H470 M436 506 L464 534 M464 506 L436 534" stroke="var(--fg)" stroke-width="2"/></g>
+    <g class="badge"><circle cx="414" cy="500" r="11"/><text x="414" y="500">10</text></g>
+  </g>
+
+  <!-- 11 odvzdušnění -->
+  <g class="part" data-id="odvzdusneni" tabindex="0" role="button" aria-label="Automatický odvzdušňovací ventil">
+    <rect class="sh" x="478" y="506" width="14" height="22" rx="3"/>
+    <rect class="sh" x="480" y="497" width="10" height="9" rx="2"/>
+    <g class="badge"><circle cx="506" cy="492" r="11"/><text x="506" y="492">11</text></g>
+  </g>
+
+  <!-- 12 trojcestný ventil -->
+  <g class="part" data-id="trojcest" tabindex="0" role="button" aria-label="Trojcestný ventil">
+    <rect class="sh" x="160" y="548" width="34" height="34" rx="4"/>
+    <text class="lab ink" x="177" y="569" style="font-size:13px">M</text>
+    <rect class="sh" x="195" y="540" width="50" height="50" rx="6"/>
+    <path class="v3arrow" id="v3" d="M220 552 V578 M212 570 L220 580 L228 570" stroke="var(--fg)" stroke-width="2.5" fill="none"/>
+    <g class="badge"><circle cx="177" cy="534" r="11"/><text x="177" y="534">12</text></g>
+  </g>
+
+  <!-- 13 deskový výměník -->
+  <g class="part" data-id="deskovy" tabindex="0" role="button" aria-label="Deskový výměník teplé vody">
+    <rect class="sh" x="300" y="560" width="60" height="100" rx="4"/>
+    <path d="M306 572 H354 M306 584 H354 M306 596 H354 M306 608 H354 M306 620 H354 M306 632 H354 M306 644 H354" stroke="var(--metal-d)" stroke-width="1.5"/>
+    <g class="badge"><circle cx="330" cy="545" r="11"/><text x="330" y="545">13</text></g>
+  </g>
+
+  <!-- 14 průtokový snímač -->
+  <g class="part" data-id="prutok" tabindex="0" role="button" aria-label="Snímač průtoku teplé vody">
+    <rect class="sh" x="370" y="728" width="20" height="28" rx="3"/>
+    <circle cx="380" cy="742" r="5" fill="none" stroke="var(--fg)" stroke-width="1.5"/>
+    <g class="badge"><circle cx="356" cy="742" r="11"/><text x="356" y="742">14</text></g>
+  </g>
+
+  <!-- 16 pojistný ventil -->
+  <g class="part" data-id="pojistny" tabindex="0" role="button" aria-label="Pojistný ventil 3 bar">
+    <rect class="sh" x="498" y="588" width="22" height="26" rx="3"/>
+    <text class="lab" x="509" y="583" style="font-size:9px">3 bar</text>
+    <g class="badge"><circle cx="534" cy="626" r="11"/><text x="534" y="626">16</text></g>
+  </g>
+
+  <!-- 17 snímač tlaku -->
+  <g class="part" data-id="tlak" tabindex="0" role="button" aria-label="Snímač tlaku vody">
+    <circle class="sh" cx="492" cy="690" r="12"/>
+    <path d="M492 690 L499 683" stroke="var(--fg)" stroke-width="2"/>
+    <g class="badge"><circle cx="522" cy="690" r="11"/><text x="522" y="690">17</text></g>
+  </g>
+
+  <!-- 19 elektronika + displej (před potrubím) -->
+  <g class="part" data-id="elektronika" tabindex="0" role="button" aria-label="Řídicí elektronika a displej">
+    <rect class="sh" x="70" y="772" width="460" height="50" rx="8"/>
+    <rect class="disp" x="250" y="782" width="100" height="30" rx="3"/>
+    <text class="ink" x="300" y="802" text-anchor="middle" font-size="13" id="dtext">1,5 bar 62°</text>
+    <circle cx="200" cy="797" r="10" fill="none" stroke="var(--metal-d)" stroke-width="2"/>
+    <circle cx="400" cy="797" r="10" fill="none" stroke="var(--metal-d)" stroke-width="2"/>
+    <rect x="120" y="789" width="22" height="16" rx="3" fill="none" stroke="var(--metal-d)" stroke-width="2"/>
+    <g class="badge"><circle cx="90" cy="797" r="11"/><text x="90" y="797">19</text></g>
+  </g>
+
+  <!-- přípojky -->
+  <g class="lab">
+    <text x="205" y="888">ÚT</text><text x="262" y="888">TV</text><text x="320" y="888">plyn</text>
+    <text x="380" y="888">SV</text><text x="412" y="888">kond.</text><text x="452" y="900" dy="-12">zpát.</text>
+  </g>
+</svg>
+<div class="legend">
+    <span><i style="background:var(--hot)"></i>topná voda výstup</span>
+    <span><i style="background:var(--ret)"></i>zpátečka</span>
+    <span><i style="background:var(--dhw)"></i>teplá voda (TV)</span>
+    <span><i style="background:var(--cold)"></i>studená voda (SV)</span>
+    <span><i style="background:var(--gas)"></i>plyn</span>
+    <span><i style="background:var(--air)"></i>vzduch</span>
+    <span><i style="background:var(--flue)"></i>spaliny</span>
+    <span><i style="background:var(--cond)"></i>kondenzát</span>
+  </div>
+    </div>
+    <aside class="panel kpanel" id="kpanel">
+      <label class="lbl" for="sel">Vyberte součást</label>
+      <select id="sel"></select>
+      <div class="ctrl"><button id="prev" type="button">← Předchozí</button><button id="next" type="button">Další →</button></div>
+      <div id="info" aria-live="polite" style="display:flex;flex-direction:column;gap:8px;padding-top:8px;border-top:1px solid var(--line)"></div>
+    </aside>
+  </div>
+  <div class="panel">
+    <div class="eyebrow">Postup krok za krokem</div>
+    <h2>Startovací sekvence hořáku</h2>
+    <p>Tohle řídicí elektronika dělá při každém požadavku na teplo. Když víte, ve kterém kroku kotel skončí, víte, kde hledat závadu.</p>
+    <div class="steps" id="steps" role="group" aria-label="Kroky sekvence"></div>
+    <div id="steptext"></div>
+  </div>
+  <div class="panel">
+    <div class="eyebrow">Vyzkoušejte se</div>
+    <p>Kvíz schová čísla na obrázku. Dostanete název součásti a máte na ni kliknout. 10 otázek.</p>
+    <button id="m-quiz" type="button" class="primary" style="align-self:flex-start">Spustit kvíz</button>
+  </div>
+  <div class="warn"><b>Bezpečnost.</b> Před zásahem do kotle ho odpojte od sítě 230 V, ověřte beznapěťový stav a uzavřete plyn. Plynová část je vyhrazené plynové zařízení podle NV 191/2022 Sb. a smí na ní pracovat jen osoba s oprávněním. Hodnoty jsou typické, vždy platí servisní návod výrobce.</div>
+</div>
+
+<!-- ZÁVADY -->
+<div class="view" id="v-zavady" hidden>
+  <div class="eyebrow">Diagnostika</div>
+  <h1>Závady kotle krok za krokem</h1>
+  <p class="lead">Vyberte, co kotel dělá. Postup je seřazený od nejjednodušší kontroly po nejsložitější. Tlačítkem pod postupem si součást ukážete na obrázku.</p>
+  <div class="warn">Než sundáte kryt: vypnout, zajistit proti zapnutí, ověřit beznapěťový stav. Měření pod napětím (napájení, PWM, ionizační proud) dělejte jen s vhodným přístrojem, správnou kategorií CAT a bez dotyku živých částí. Plynovou část nechte osobě s oprávněním.</div>
+  <div id="faults" style="display:flex;flex-direction:column;gap:8px"></div>
+</div>
+
+<!-- PRAXE -->
+<div class="view body-text" id="v-praxe" hidden>
+<section>
+  <div class="eyebrow">Praktická část</div>
+  <h2>Co budete u zkoušky dělat rukama</h2>
+  <p>Zkoušející zadá úlohu a hodnotí bezpečnost, kvalitu provedení a čas. Nejčastější zadání a co si při nich ohlídat:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Úloha</th><th>Na co se dívá zkoušející</th></tr></thead>
+    <tbody>
+      <tr><td>Zásuvkový obvod z rozvodnice (jistič B16 + chránič 30 mA)</td><td>2,5 mm², L vlevo, PE nahoře, průběžné PE nepřerušené, dutinky, změření izolace a smyčky, test chrániče</td></tr>
+      <tr><td>Světelný obvod (řazení 1, 5, 6 nebo 6+7+6)</td><td>vypínač spíná L, objímka L na střed, správné přepínací vodiče, zelenožlutá jen jako PE</td></tr>
+      <tr><td>Připojení asynchronního motoru</td><td>Y/Δ podle štítku a sítě, PE na kostru, směr otáčení, jištění C/D nebo motorový spouštěč</td></tr>
+      <tr><td>Stykačová kombinace (START/STOP, reverzace)</td><td>přídržný kontakt, STOP rozpínací, tepelné relé 95-96 v ovládání, vzájemné blokování</td></tr>
+      <tr><td>Měření (jedna metoda)</td><td>volba přístroje a rozsahu, kategorie CAT, správné připojení, vyhodnocení proti mezní hodnotě</td></tr>
+      <tr><td>Kontrola a oprava spotřebiče</td><td>prohlídka, výměna přívodu, R_PE, R_iso, unikající proud, protokol, poučení zákazníka</td></tr>
+    </tbody>
+  </table></div>
+  <div class="ex"><div class="t">Vzor protokolu o kontrole a opravě spotřebiče</div>
+    <pre>Protokol č.: 2026/014                    Datum: 7. 11. 2026
+Zákazník: ……………………          Spotřebič: vrtačka XY 650 W, v. č. 123456
+Třída ochrany: I                      Napětí: 230 V / 50 Hz
+Závada: poškozený přívod u vidlice
+Oprava: výměna přívodu za H05RR-F 3G1,0 (2 m), nová vidlice
+Měření (ČSN EN 50678):         naměřeno     mez        vyhovuje
+  odpor ochranného vodiče      0,08 Ω       ≤ 0,3 Ω    ano
+  izolační odpor (500 V DC)    &gt; 200 MΩ     ≥ 1 MΩ     ano
+  proud ochranným vodičem      0,4 mA       ≤ 3,5 mA   ano
+Funkční zkouška: vyhovuje
+Měřicí přístroj: ………… v. č. ……, kalibrace do 06/2027
+Závěr: SPOTŘEBIČ JE Z HLEDISKA BEZPEČNOSTI SCHOPEN PROVOZU
+Zákazník poučen o bezpečném používání.   Podpis: ……………</pre>
+  </div>
+</section>
+  <div class="panel">
+    <h2>Související lekce</h2>
+    <div class="row">
+      <a class="btn" href="#ucivo" data-go="ucivo" data-arg="k7">Lekce 7: Měření</a>
+      <a class="btn" href="#ucivo" data-go="ucivo" data-arg="k8">Lekce 8: Montáž a zapojování</a>
+      <a class="btn" href="#ucivo" data-go="ucivo" data-arg="k9">Lekce 9: Kontroly spotřebičů</a>
+    </div>
+  </div>
+</div>
+
+<!-- TESTY -->
+<div class="view" id="v-testy" hidden>
+  <div class="eyebrow">Testy</div>
+  <h1>Testové otázky</h1>
+  <p class="lead">Tři odpovědi, právě jedna správná. Simulace zkoušky vybere 30 otázek z témat 1–7 a vyhodnotí je jako u zkoušky: celkem aspoň 80 % a v každém tématu aspoň 50 %.</p>
+  <div class="panel">
+    <div class="row">
+      <button class="primary" id="btn-exam" type="button">Simulace zkoušky (30 otázek)</button>
+      <button id="btn-practice" type="button">Procvičovat vybraná témata</button>
+      <button id="btn-wrong" type="button">Jen moje chyby</button>
+      <label for="cnt" class="lbl">Počet</label>
+      <select id="cnt"><option value="10">10</option><option value="20" selected>20</option><option value="40">40</option><option value="999">všechny</option></select>
+    </div>
+    <div class="row" id="topics"></div>
+    <div id="bank-info" class="how"></div>
+  </div>
+  <div class="panel" id="quiz" aria-live="polite"><p class="how">Zvolte typ testu výše.</p></div>
+</div>
+
+<!-- ÚSTNÍ -->
+<div class="view" id="v-ustni" hidden>
+  <div class="eyebrow">Ústní zkouška</div>
+  <h1>Otázky, na které se zkoušející doptává</h1>
+  <p class="lead">Odpovězte nahlas a pak si rozbalte vzorovou odpověď.</p>
+  <div id="cards" style="display:flex;flex-direction:column;gap:8px"></div>
+</div>
+
+<!-- SLOVNÍČEK -->
+<div class="view" id="v-slovnik" hidden>
+  <div class="eyebrow">Slovníček</div>
+  <h1>Pojmy a zkratky</h1>
+  <label for="gsearch" class="lbl">Hledat</label>
+  <input type="search" id="gsearch" placeholder="např. PEN, chránič, NTC" style="max-width:420px">
+  <dl class="gl" id="gl"></dl>
+</div>
+</main>
+</div>
+
+<script>
+const TOPICS={1:"Základy",2:"Bezpečnost",3:"Ochrana před úrazem",4:"Jištění a vedení",5:"Blesk a přepětí",6:"Dokumentace",7:"Měření",8:"Montáž",9:"Spotřebiče",10:"První pomoc",11:"NV 194/2022"};
+const Q=[
+[1,"Jak zní Ohmův zákon?","I = U / R","I = U · R","I = R / U","Proud je přímo úměrný napětí a nepřímo úměrný odporu."],
+[1,"Spotřebič s odporem 46 Ω je připojen na 230 V. Jaký jím teče proud?","5 A","0,2 A","50 A","I = U/R = 230/46 = 5 A."],
+[1,"Odporový spotřebič odebírá při 230 V proud 10 A. Jaký je jeho výkon?","2300 W","230 W","23 W","P = U·I = 230·10 = 2300 W."],
+[1,"V jaké jednotce se běžně účtuje spotřebovaná elektrická energie?","kWh","kW","kVA","kW je výkon, kVA zdánlivý výkon. Energie = výkon × čas → kWh."],
+[1,"Kolik energie spotřebuje spotřebič 2 kW za 3 hodiny?","6 kWh","0,67 kWh","1,5 kWh","W = P·t = 2 kW · 3 h = 6 kWh."],
+[1,"Odpory 10 Ω a 20 Ω jsou zapojeny sériově. Jaký je výsledný odpor?","30 Ω","6,67 Ω","200 Ω","Při sériovém řazení se odpory sčítají."],
+[1,"Dva odpory po 10 Ω jsou zapojeny paralelně. Jaký je výsledný odpor?","5 Ω","20 Ω","10 Ω","Dva stejné odpory paralelně = polovina: 10·10/(10+10) = 5 Ω."],
+[1,"Co říká 1. Kirchhoffův zákon?","Součet proudů vstupujících do uzlu se rovná součtu proudů z uzlu vystupujících.","Součet napětí v uzavřené smyčce je nulový.","Proud je nepřímo úměrný napětí.","1. KZ platí pro uzel (proudy), 2. KZ pro smyčku (napětí)."],
+[1,"Co říká 2. Kirchhoffův zákon?","Algebraický součet napětí v uzavřené smyčce je nulový.","Součet proudů v uzlu je nulový.","Odpor vodiče roste s teplotou.","2. KZ: součet napětí zdrojů = součet úbytků napětí ve smyčce."],
+[1,"Jak se chová napětí u odporů zapojených sériově?","Dělí se v poměru velikosti odporů.","Na všech odporech je stejné.","Na menším odporu je větší napětí.","Sériově teče stejný proud, úbytek U = R·I je větší na větším odporu."],
+[1,"Co platí pro spotřebiče zapojené paralelně?","Na všech je stejné napětí.","Všemi teče stejný proud.","Výsledný odpor je větší než největší z nich.","Paralelně = stejné napětí, proudy se sčítají, výsledný odpor je menší než nejmenší."],
+[1,"Jakou frekvenci má veřejná síť v ČR?","50 Hz","60 Hz","100 Hz","Evropská síť má 50 Hz."],
+[1,"Jaké je fázové napětí v síti 3 × 400/230 V?","230 V","400 V","325 V","Fázové (L-N) je 230 V, sdružené (L-L) 400 V."],
+[1,"Jaký je vztah mezi sdruženým a fázovým napětím?","Us = √3 · Uf","Us = 2 · Uf","Us = Uf / √3","400 ≈ 1,732 · 230."],
+[1,"Jaká je maximální (vrcholová) hodnota napětí 230 V efektivních?","asi 325 V","230 V","400 V","Umax = √2 · Uef = 1,414 · 230 ≈ 325 V."],
+[1,"Jak se vypočítá činný výkon jednofázového střídavého obvodu?","P = U · I · cos φ","P = U · I · sin φ","P = U² · I","U·I·sin φ je jalový výkon."],
+[1,"Jak se vypočítá činný výkon trojfázového spotřebiče (U = sdružené napětí)?","P = √3 · U · I · cos φ","P = 3 · U · I","P = U · I / √3","Pro souměrnou zátěž se sdruženým napětím platí √3·U·I·cos φ."],
+[1,"V jaké jednotce se udává jalový výkon?","var","VA","W","W činný, VA zdánlivý, var jalový."],
+[1,"Jak závisí odpor vodiče na jeho rozměrech?","Roste s délkou a klesá s průřezem.","Klesá s délkou a roste s průřezem.","Nezávisí na materiálu, jen na délce.","R = ρ·l/S."],
+[1,"Jaký je přibližně měrný odpor mědi?","0,0178 Ω·mm²/m","0,0285 Ω·mm²/m","1,78 Ω·mm²/m","0,0285 je hliník."],
+[1,"Co označuje písmeno C v označení sítě TN-C?","Funkce ochranného a středního vodiče jsou sloučeny v jednom vodiči PEN.","Ochranný a střední vodič jsou vedeny odděleně.","Uzel zdroje je izolován od země.","C = combined (sloučeno), S = separated (odděleno)."],
+[1,"Čím se vyznačuje síť TN-S?","Ochranný vodič PE a střední vodič N jsou v celé síti odděleny.","PE a N jsou sloučeny v PEN.","Neživé části jsou uzemněny samostatným zemničem.","TN-S = 5vodičový rozvod L1, L2, L3, N, PE."],
+[1,"Co znamená první písmeno T v označení sítě (např. TN, TT)?","Uzel zdroje je přímo uzemněn.","Neživé části jsou uzemněny.","Síť je třívodičová.","První písmeno popisuje vztah zdroje k zemi."],
+[1,"Čím je charakteristická síť TT?","Neživé části jsou uzemněny samostatně, nezávisle na uzemnění zdroje.","Neživé části jsou spojeny s vodičem PEN.","Zdroj je izolován od země.","Druhé T = neživé části mají vlastní uzemnění."],
+[1,"Čím je charakteristická síť IT?","Živé části jsou izolovány od země nebo uzemněny přes velkou impedanci.","Uzel zdroje je přímo uzemněn a neživé části spojeny s PEN.","Používá se jen pro venkovní osvětlení.","Při první poruše IT síť nevypíná, porucha se jen hlásí (hlídač izolace)."],
+[1,"Jakou barvu má ochranný vodič PE?","zelenožlutou","světle modrou","černou","Zelenožlutá je vyhrazena výhradně pro ochranné vodiče."],
+[1,"Jakou barvu má střední (nulový) vodič N?","světle modrou","zelenožlutou","hnědou","N je světle modrý."],
+[1,"Jaké barvy mají fázové vodiče L1, L2, L3?","hnědá, černá, šedá","modrá, černá, hnědá","červená, žlutá, zelená","Modrá je N. Červená/žlutá/zelená je staré značení přípojnic."],
+[1,"K čemu smí být použit vodič se zelenožlutou izolací?","Jen jako ochranný vodič (PE, PEN, ochranné pospojování).","Jako fázový vodič, pokud je to vyznačeno.","Jako ovládací vodič pro vypínač.","Zelenožlutou nikdy nepoužijete pro jiný účel."],
+[1,"Co vyjadřuje první číslice kódu IP?","Ochranu před vniknutím cizích těles a před dotykem nebezpečných částí.","Ochranu před vniknutím vody.","Odolnost proti mechanickému nárazu.","Druhá číslice = voda, mechanický náraz = kód IK."],
+[1,"Co znamená druhá číslice 4 v kódu IP44?","Ochranu před stříkající vodou ze všech směrů.","Ochranu při trvalém ponoření.","Bez ochrany proti vodě.","4 = stříkající voda, 7 = dočasné, 8 = trvalé ponoření."],
+[1,"Co znamená krytí IP68?","Prachotěsné a chráněné při trvalém ponoření.","Chráněné před prstem a kapající vodou.","Bez ochrany před prachem, odolné proti tryskající vodě.","6 = prachotěsné, 8 = trvalé ponoření."],
+[1,"Jak se značí začátky vinutí trojfázového motoru?","U1, V1, W1","L1, L2, L3","A1, A2, A3","L1-L3 jsou fáze sítě, A1/A2 cívka stykače."],
+[1,"Jak se značí svorky cívky stykače?","A1 a A2","13 a 14","95 a 96","13-14 je pomocný spínací kontakt, 95-96 kontakt tepelného relé."],
+[1,"Jaký je pomocný kontakt stykače s čísly 13-14?","spínací (NO)","rozpínací (NC)","přepínací","Koncovka 3-4 = spínací, 1-2 = rozpínací."],
+[1,"Do jakého napětí sahá pásmo nízkého napětí (NN)?","do 1000 V AC / 1500 V DC","do 400 V AC","do 50 V AC","Nad 1 kV začíná vysoké napětí."],
+[1,"Do jaké hodnoty se střídavé napětí považuje za malé napětí (ELV)?","do 50 V","do 120 V","do 230 V","ELV: 50 V AC, 120 V DC."],
+[2,"Co je obsluha elektrického zařízení?","Činnosti ke změně provozního stavu zařízení, např. spínání, ovládání a sledování.","Oprava a výměna vadných dílů zařízení.","Montáž nové elektroinstalace.","Práce (oprava, montáž) vyžaduje vyšší kvalifikaci než obsluha."],
+[2,"Jaký je první krok při zajištění práce bez napětí?","Vypnout a úplně odpojit pracoviště od zdrojů.","Uzemnit a zkratovat.","Ověřit beznapěťový stav.","Pořadí: vypnout – zajistit – ověřit – uzemnit a zkratovat – zakrýt sousední živé části."],
+[2,"Které je správné pořadí pěti pravidel práce bez napětí?","vypnout, zajistit proti zapnutí, ověřit beznapětí, uzemnit a zkratovat, zakrýt živé části v okolí","ověřit beznapětí, vypnout, uzemnit, zajistit, zakrýt","vypnout, uzemnit, ověřit beznapětí, zakrýt, zajistit","Uzemňuje se až po ověření, že zařízení není pod napětím."],
+[2,"Čím se ověřuje beznapěťový stav?","Zkoušečkou napětí, jejíž funkce se ověří na známém zdroji před i po použití.","Ohmmetrem na nejnižším rozsahu.","Dotykem hřbetu ruky.","Zkoušečka musí být prokazatelně funkční."],
+[2,"V jakém pořadí se připojuje uzemňovací a zkratovací souprava?","Nejdřív k zemnicímu bodu, potom k vodičům.","Nejdřív k vodičům, potom k zemi.","Na pořadí nezáleží.","Při odstraňování opačně: nejdřív od vodičů, pak od země."],
+[2,"Jaká tabulka se umístí na vypnutý a zajištěný vypínač?","Nezapínat! Pracuje se","Pozor! Elektrické zařízení","Zákaz vstupu nepovolaným","Upozorňuje, že na zařízení se pracuje."],
+[2,"Kdo smí provádět práci pod napětím?","Jen osoby k tomu speciálně vyškolené, se zvláštními postupy a nářadím.","Každý elektrotechnik.","Osoba poučená s dohledem.","Práce pod napětím má zvláštní požadavky na výcvik a vybavení."],
+[2,"Jak je označeno izolované nářadí pro práci pod napětím do 1000 V?","dvojitým trojúhelníkem a údajem 1000 V","dvojitým čtvercem","značkou CE","Dvojitý čtverec je třída ochrany II spotřebiče."],
+[2,"Jaká je pro NN vnější hranice zóny blízkosti DV podle ČSN EN 50110-1?","0,3 m","3 m","1,5 m","Pro NN: DL bez dotyku, DV 0,3 m."],
+[2,"Co smí samostatně dělat osoba poučená?","Obsluhovat elektrická zařízení, dotýkat se jen částí určených k obsluze.","Samostatně opravovat rozvaděče.","Provádět revize.","NV 194/2022 § 4 odst. 4."],
+[2,"Co patří mezi ochranné pomůcky při práci na elektrickém zařízení?","izolační rukavice, izolační podložka, obličejový štít","bavlněné rukavice a tenisky","kovový žebřík a ochranné brýle","Pomůcky před použitím zkontrolujte."],
+[2,"Co uděláte před prací na zařízení s kondenzátory?","Vypnu a kondenzátory bezpečně vybiji.","Stačí vypnout jistič.","Kondenzátory zkratuji šroubovákem pod napětím.","Kondenzátory mohou udržet nebezpečné napětí i po vypnutí."],
+[2,"Jak je to s prací v blízkosti živých částí NN pro osobu poučenou?","Smí ji provádět jen s dohledem osoby znalé.","Smí ji provádět samostatně bez omezení.","Nesmí ji provádět nikdy.","NV 194/2022 § 4 odst. 4 písm. d)."],
+[2,"Kdy smíte znovu zapnout zařízení po skončení práce?","Až jsou všichni mimo zařízení, odstraněno uzemnění, nářadí a kryty a je to ohlášeno.","Kdykoliv po dokončení vlastní části práce.","Až na pokyn zákazníka.","Postupuje se v opačném pořadí než při zajištění."],
+[2,"Která norma upravuje obsluhu a práci na elektrických zařízeních?","ČSN EN 50110-1","ČSN EN 62305","ČSN EN 60529","62305 je ochrana před bleskem, 60529 krytí IP."],
+[2,"Co znamená práce bez napětí?","Práce na zařízení, které není pod napětím ani nabité, po provedení opatření proti úrazu.","Práce pouze při malém napětí.","Práce na zařízení po vypnutí hlavního vypínače bez dalších opatření.","Vypnutí samo o sobě nestačí, musí následovat další pravidla."],
+[3,"Co je základní ochrana?","Ochrana před dotykem živých částí za normálního stavu.","Ochrana před dotykem neživých částí při poruše.","Ochrana před bleskem.","Dříve „ochrana před nebezpečným dotykem živých částí“."],
+[3,"Co je ochrana při poruše?","Ochrana před dotykem neživých částí, které se při poruše dostaly pod napětí.","Ochrana před přetížením vedení.","Ochrana kryty a přepážkami.","Kryty a přepážky patří do základní ochrany."],
+[3,"Který prostředek patří do základní ochrany?","izolace živých částí","ochranné pospojování","automatické odpojení od zdroje","Pospojování a odpojení jsou prostředky ochrany při poruše."],
+[3,"Jaká je maximální doba odpojení v koncovém obvodu sítě TN 230 V?","0,4 s","5 s","0,2 s","TN 230 V: 0,4 s (koncový), 5 s (distribuční)."],
+[3,"Jaká je maximální doba odpojení v koncovém obvodu sítě TT 230 V?","0,2 s","0,4 s","1 s","TT 230 V: 0,2 s."],
+[3,"Jaká je maximální doba odpojení distribučního obvodu v síti TN?","5 s","0,4 s","1 min","Distribuční obvody TN: 5 s."],
+[3,"Jak zní podmínka automatického odpojení v síti TN?","Zs · Ia ≤ U0","RA · IΔn ≥ 50 V","Zs ≥ U0 · Ia","Impedance smyčky musí být dost malá, aby tekl proud Ia potřebný k vypnutí."],
+[3,"Na jakém principu pracuje proudový chránič?","Porovnává proudy procházející součtovým transformátorem a vypne při rozdílu.","Měří napětí mezi fází a zemí.","Reaguje na oteplení bimetalu.","Rozdílový proud odtéká mimo obvod (PE, člověk)."],
+[3,"Před čím proudový chránič (RCD) nechrání?","před přetížením a zkratem","před dotykem neživé části pod napětím","před úrazem při dotyku fáze a země","Proti nadproudům chrání jistič nebo kombinovaný chránič RCBO."],
+[3,"Jaký vybavovací rozdílový proud musí mít chránič pro doplňkovou ochranu?","nejvýše 30 mA","nejvýše 300 mA","nejméně 100 mA","100–500 mA jsou chrániče pro ochranu před požárem."],
+[3,"V jakém rozmezí musí chránič vybavit?","0,5 až 1 × IΔn","1 až 2 × IΔn","0,1 až 0,3 × IΔn","Nesmí vybavit pod 0,5 IΔn a musí vybavit nejpozději při IΔn."],
+[3,"Který typ chrániče reaguje i na hladký stejnosměrný rozdílový proud?","typ B","typ AC","typ A","AC jen sinusový, A i pulzující DC, B i hladký DC."],
+[3,"Proč nelze použít proudový chránič v síti TN-C?","Vodič PEN by procházel chráničem a poruchový proud by se nedal rozlišit.","Chránič v TN-C vypíná příliš pozdě.","V síti TN-C není fázový vodič.","Chránič se používá až za rozdělením PEN, tedy v TN-S části."],
+[3,"Co charakterizuje spotřebič třídy ochrany I?","Neživé části jsou spojeny s ochranným vodičem PE.","Má dvojitou izolaci a nepřipojuje se k PE.","Napájí se malým napětím SELV.","Třída I = ochranná svorka ⏚."],
+[3,"Jak je označen spotřebič třídy ochrany II?","dvojitým čtvercem","symbolem uzemnění","kosočtvercem s číslicí III","Dvojitý čtverec = dvojitá nebo zesílená izolace."],
+[3,"Jak je chráněn spotřebič třídy III?","Je napájen malým bezpečným napětím (SELV/PELV).","Má připojen ochranný vodič.","Má zesílenou izolaci a pracuje na 230 V.","Třída III = SELV/PELV."],
+[3,"Čím se liší SELV od PELV?","Obvod SELV není uzemněn, PELV je uzemněn.","SELV je do 120 V AC, PELV do 50 V AC.","PELV se napájí z autotransformátoru.","Obě mají malé napětí z bezpečnostního zdroje."],
+[3,"Co je ochranné pospojování?","Vodivé spojení neživých a cizích vodivých částí s hlavní ochrannou přípojnicí.","Spojení fázových vodičů do jedné svorky.","Propojení N a PE za chráničem.","Vyrovnává potenciály a omezuje dotykové napětí."],
+[3,"Co je elektrické oddělení jako ochranné opatření?","Napájení jednoho spotřebiče z oddělovacího transformátoru bez spojení se zemí.","Oddělení obvodů jističem.","Vedení kabelů v oddělených trubkách.","Dotyk jednoho vodiče neuzavře obvod přes zem."],
+[3,"Proti čemu chrání zábrana?","jen proti neúmyslnému dotyku živých částí","proti úmyslnému dotyku","proti přepětí","Zábranu lze úmyslně obejít, proto chrání jen před neúmyslným dotykem."],
+[3,"Jaký je účel doplňkové ochrany?","Chránit při selhání základní ochrany nebo ochrany při poruše, nebo při neopatrnosti uživatele.","Nahradit ochranu při poruše.","Chránit vedení před přetížením.","Typicky chránič 30 mA a doplňující pospojování."],
+[3,"Co se nesmí za proudovým chráničem dělat?","Spojit vodič N s vodičem PE.","Připojit zásuvku.","Použít kabel CYKY.","Spojením N a PE za chráničem by chránič vybavoval nebo nefungoval."],
+[3,"Jaká je podmínka ochrany v síti TT s chráničem?","RA · IΔn ≤ 50 V","RA ≥ 50 V / IΔn","Zs · Ia ≥ U0","RA = odpor uzemnění neživých částí."],
+[3,"Jak často má uživatel stisknout testovací tlačítko chrániče?","pravidelně podle návodu výrobce, obvykle jednou za měsíc až půl roku","jen při revizi jednou za 5 let","nikdy, tlačítko je jen pro revizního technika","Tlačítko prověřuje mechanickou funkci."],
+[3,"Co je neživá část?","Vodivá část, kterou se lze dotknout a která za normálního stavu není pod napětím.","Vodič N.","Izolovaný kabel.","Např. kovový kryt pračky třídy I."],
+[4,"Jaká podmínka platí pro koordinaci jištění a vedení?","IB ≤ In ≤ Iz","Iz ≤ In ≤ IB","In ≥ Iz ≥ IB","Jistič musí být větší než proud obvodu a menší než zatížitelnost vedení."],
+[4,"Jaký jistič se obvykle používá pro zásuvkový obvod z Cu 2,5 mm²?","B16","C32","B6","2,5 mm² Cu → B16."],
+[4,"Jaký jistič se obvykle používá pro světelný obvod z Cu 1,5 mm²?","B10","B25","D16","1,5 mm² Cu → B10."],
+[4,"Při jakém násobku In vypíná okamžitě jistič s charakteristikou B?","3–5 × In","5–10 × In","10–20 × In","C: 5–10×, D: 10–20×."],
+[4,"Jakou charakteristiku jističe zvolíte pro motor s velkým záběrovým proudem?","C nebo D","B","Na charakteristice nezáleží.","B by při rozběhu motoru vypínala."],
+[4,"Před čím chrání tepelná (bimetalová) spoušť jističe?","před přetížením","před zkratem","před úrazem","Elektromagnetická spoušť chrání před zkratem."],
+[4,"Co znamená označení pojistky gG?","celorozsahová pojistka pro jištění vedení","pojistka jen pro zkratovou ochranu motorů","rychlá pojistka pro polovodiče","aM = zkratová pro motory."],
+[4,"Co je selektivita jištění?","Při poruše vypne jen jisticí prvek nejblíže místu poruchy.","Všechny jističe vypnou současně.","Jistič vypíná jen fázi, ne N.","Ostatní obvody zůstanou v provozu."],
+[4,"Co snižuje proudovou zatížitelnost vedení?","vyšší teplota okolí a seskupení více vedení","větší průřez vodiče","kratší délka vedení","Teplo se hůř odvádí."],
+[4,"Který vodič spíná vypínač světla?","fázový","střední N","ochranný PE","Po vypnutí pak na svítidle není fáze."],
+[4,"Jak se zapojuje zásuvka (pohled zepředu, ochranný kolík nahoře)?","Fáze na levou dutinku, N na pravou.","Fáze na pravou dutinku, N na levou.","Na pořadí nezáleží.","ČSN 33 2180."],
+[4,"Kam se v objímce E27 připojuje fázový vodič?","na středový (patní) kontakt","na závit","na kterýkoli kontakt","Závit je přístupný při výměně žárovky, proto na něm má být N."],
+[4,"Jak se vede elektrické vedení ve zdi?","vodorovně nebo svisle v instalačních zónách","šikmo nejkratší cestou","libovolně, pokud je pod omítkou","ČSN 33 2130."],
+[4,"Jak se smějí spojovat vodiče v instalaci?","svorkami v přístupných krabicích","zkroucením a izolační páskou","zkroucením v omítce","Kroucení je nepřípustné."],
+[4,"Proč se přímo nespojují měděné a hliníkové vodiče?","Vzniká galvanická koroze a spoj se zahřívá.","Hliník má větší průřez.","Je to povoleno bez omezení.","Používají se svorky schválené pro Cu-Al."],
+[4,"Proč se ochranný vodič v pohyblivém přívodu nechává delší?","Aby se při vytržení přívodu odpojil jako poslední.","Aby šel snadněji připojit.","Kvůli menšímu odporu.","PE musí zůstat připojen nejdéle."],
+[4,"Co znamená číslo 05 v označení H05VV-F?","jmenovité napětí 300/500 V","průřez 0,5 mm²","5 žil","07 = 450/750 V."],
+[4,"Co znamená označení 3G1,5 u pohyblivého přívodu?","3 žíly včetně zelenožluté, průřez 1,5 mm²","3 žíly bez ochranného vodiče, 1,5 mm²","1,5 m dlouhý třížilový kabel","G = obsahuje zelenožlutou žílu, X = bez ní."],
+[4,"Jaký pohyblivý přívod je vhodný pro venkovní použití a stavbu?","H07RN-F","H03VV-F","CYKY","H07RN-F má pryžovou izolaci a plášť odolný povětrnosti."],
+[4,"Co musí mít každý pohyblivý přívod u vidlice a spotřebiče?","odlehčení tahu a ochranu proti zkroucení","jen izolační pásku","pocínované konce ve šroubových svorkách","Cín ve šroubové svorce teče a spoj se uvolní."],
+[4,"Jaký je doporučený úbytek napětí pro světelné obvody?","do 3 %","do 10 %","do 15 %","Pro ostatní obvody do 5 %."],
+[4,"Která čtyři hlediska se posuzují při dimenzování vedení?","zatížitelnost, úbytek napětí, zkratová odolnost, mechanická pevnost","barva, cena, délka, výrobce","jen proudová zatížitelnost","Rozhodující je nejpřísnější z hledisek."],
+[5,"Ze kterých částí se skládá vnější LPS?","jímací soustava, svody, uzemňovací soustava","SPD, jistič, chránič","anténa, stožár, svorkovnice","Vnitřní LPS = vyrovnání potenciálů a dostatečná vzdálenost."],
+[5,"Co je úkolem vnitřního LPS?","zabránit nebezpečnému jiskření uvnitř objektu vyrovnáním potenciálů a dodržením dostatečné vzdálenosti","zachytit přímý úder blesku","svést bleskový proud do země","Zachycení a svedení dělá vnější LPS."],
+[5,"Která třída LPS je nejpřísnější?","třída I","třída IV","třída II","I: valivá koule 20 m."],
+[5,"Jaký poloměr valivé koule se používá pro LPS třídy I?","20 m","60 m","45 m","I 20, II 30, III 45, IV 60 m."],
+[5,"Jakou velikost ok má mřížová soustava pro LPS třídy III?","15 × 15 m","5 × 5 m","20 × 20 m","I 5×5, II 10×10, III 15×15, IV 20×20."],
+[5,"Kam se instaluje svodič přepětí SPD typ 1?","na vstup vedení do objektu s vnějším LPS","přímo do zásuvky u počítače","jen na střechu k jímači","Typ 1 svádí část bleskového proudu (vlna 10/350 µs)."],
+[5,"Kde se typicky instaluje SPD typ 2?","v podružných rozvaděčích","na hromosvodný svod","do anténního konektoru","Typ 2 je zkoušen vlnou 8/20 µs."],
+[5,"K čemu slouží SPD typ 3?","jemná ochrana koncových zařízení","ochrana před přímým úderem blesku","ochrana vedení před přetížením","Instaluje se v blízkosti chráněného přístroje."],
+[5,"Co znamená zkratka LEMP?","elektromagnetický impulz blesku","systém ochrany před bleskem","svodič přepětí","Lightning ElectroMagnetic imPulse."],
+[5,"Která norma se zabývá ochranou před bleskem?","ČSN EN 62305","ČSN EN 50110","ČSN 33 2180","50110 obsluha a práce, 33 2180 připojování přístrojů."],
+[5,"Které škody může blesk způsobit?","úraz krokovým a dotykovým napětím, požár, poruchy elektronických systémů","jen mechanické poškození střechy","jen přepálení pojistek","Tři typy škod podle ČSN EN 62305."],
+[5,"Jak se chrání citlivá elektronika před LEMP?","koordinovanými SPD, stíněním a vyrovnáním potenciálů","jen jističem charakteristiky B","vypnutím chrániče","Kombinace opatření na rozhraní zón LPZ."],
+[5,"Co je zóna LPZ 0A?","prostor ohrožený přímým úderem blesku a plným elektromagnetickým polem","vnitřek kovové skříně","prostor za SPD typ 3","LPZ 0B je chráněna před přímým úderem."],
+[5,"Jaká je typická vzdálenost mezi svody pro LPS třídy III?","15 m","5 m","40 m","I a II 10 m, III 15 m, IV 20 m."],
+[5,"Jaký odpor uzemnění hromosvodu se obvykle doporučuje?","do 10 Ω","do 100 Ω","do 1 kΩ","Nízký odpor snižuje potenciál při úderu."],
+[6,"Která dokumentace zachycuje, jak byla instalace skutečně provedena?","dokumentace skutečného provedení","studie","návod k obsluze","Zahrnuje i změny proti projektu."],
+[6,"Které schéma zobrazuje úplné zapojení všech prvků obvodu?","obvodové (elektrické) schéma","přehledové (blokové) schéma","situační výkres","Blokové schéma je zjednodušené."],
+[6,"Co zobrazuje instalační (dispoziční) výkres?","půdorys s polohou zásuvek, vypínačů, svítidel a tras vedení","vnitřní zapojení stykače","výpočet úbytku napětí","Slouží při montáži na stavbě."],
+[6,"Jak se nazývá vypínač řazení 6?","střídavý (schodišťový) přepínač","sériový (lustrový) přepínač","křížový přepínač","5 = sériový, 7 = křížový."],
+[6,"Jak se nazývá vypínač řazení 7?","křížový přepínač","střídavý přepínač","dvoupólový vypínač","Vkládá se mezi dva přepínače č. 6."],
+[6,"K čemu slouží vypínač řazení 5?","k ovládání dvou skupin svítidel z jednoho místa","k ovládání jednoho svítidla ze dvou míst","k odpojení L i N","Lustrový přepínač."],
+[6,"Kolik a jakých přepínačů potřebujete k ovládání jednoho svítidla ze tří míst?","dva přepínače č. 6 a jeden č. 7","tři přepínače č. 6","tři vypínače č. 1","Na konce řazení 6, uprostřed křížový 7."],
+[6,"Co znamená kroužek s písmenem M a znakem 3~?","trojfázový motor","měřicí přístroj","transformátor","M = motor."],
+[6,"Která norma stanoví grafické značky pro schémata?","ČSN EN 60617","ČSN EN 60529","ČSN EN 50110-1","60529 = krytí IP."],
+[6,"Jsou české technické normy (ČSN) závazné?","Obecně ne, pokud jejich závaznost nestanoví právní předpis.","Vždy jsou závazné.","Jsou závazné jen pro státní podniky.","Dodržení normy ale je nejsnazší cesta, jak prokázat splnění požadavků."],
+[6,"Kdo vydává místní provozní bezpečnostní předpis?","provozovatel (zaměstnavatel)","výrobce spotřebiče","Česká obchodní inspekce","Upravuje provoz a práci na konkrétních zařízeních."],
+[6,"Které písmeno se ve schématech používá pro stykač nebo relé?","K","F","X","F = jisticí prvek, X = svorkovnice."],
+[6,"Které písmeno se ve schématech používá pro jisticí prvek (pojistku, tepelné relé)?","F","M","S","M = motor, S = spínač/tlačítko."],
+[6,"Co zobrazuje přehledové (blokové) schéma?","zjednodušenou strukturu zařízení a vazby mezi celky","úplné zapojení každé svorky","polohu prvků v půdorysu","Používá se pro orientaci."],
+[6,"Co musí obsahovat revizní zpráva?","mimo jiné výsledky měření a celkový posudek o bezpečnosti zařízení","jen podpis majitele","jen fotografie zařízení","Závěr: zařízení je / není schopno bezpečného provozu."],
+[7,"Jak se zapojuje ampérmetr?","do série se spotřebičem","paralelně ke spotřebiči","mezi fázi a ochranný vodič","Ampérmetr má malý vnitřní odpor."],
+[7,"Jak se zapojuje voltmetr?","paralelně k měřenému místu","do série","jen přes proudový transformátor","Voltmetr má velký vnitřní odpor."],
+[7,"Jak správně změřit proud klešťovým ampérmetrem?","Obejmout jen jeden vodič.","Obejmout celý kabel L i N.","Připojit kleště mezi L a N.","Proudy v L a N se v celém kabelu vyruší."],
+[7,"Jaký rozsah zvolíte při měření neznámé hodnoty?","nejvyšší a pak postupně snižovat","nejnižší","libovolný","Ochrana přístroje před přetížením."],
+[7,"Jakým napětím se měří izolační odpor obvodu 230/400 V?","500 V DC","230 V AC","1000 V AC","Pro SELV/PELV 250 V DC, nad 500 V 1000 V DC."],
+[7,"Jaká je minimální hodnota izolačního odporu pro obvod 230/400 V (ČSN 33 2000-6)?","1 MΩ","1 kΩ","0,1 MΩ","Pro SELV/PELV 0,5 MΩ."],
+[7,"Jak se zapojuje wattmetr?","proudová cívka do série, napěťová paralelně","obě cívky do série","obě cívky paralelně","Měří součin napětí a proudu."],
+[7,"Kolik wattmetrů se používá v Aronově zapojení?","dva","jeden","tři","Aronovo zapojení je pro trojvodičovou soustavu."],
+[7,"Jaká je maximální impedance smyčky pro jistič B16 v síti 230 V (bez rezervy)?","asi 2,9 Ω","asi 14 Ω","asi 0,3 Ω","Zs = 230 / (5·16) = 2,87 Ω."],
+[7,"Pro jaké místo měření je určen přístroj kategorie CAT III?","pevná instalace v budově, rozvaděče","jen elektronika napájená z baterie","venkovní přípojka a elektroměr","CAT IV = přípojka, CAT II = zásuvky a spotřebiče."],
+[7,"Za jakého stavu měříte odpor ohmmetrem?","bez napětí","pod napětím","jen při zapnutém chrániči","Napětí by přístroj poškodilo a zkreslilo výsledek."],
+[7,"Jakým proudem se zkouší spojitost ochranných vodičů?","nejméně 200 mA","nejvýše 1 mA","přesně 16 A","Malým proudem by se neodhalily přechodové odpory."],
+[7,"Co se měří u proudového chrániče?","vybavovací rozdílový proud a vybavovací čas","izolační odpor cívky","impedanci smyčky L-N","Musí vybavit v 0,5–1 IΔn a včas."],
+[7,"Proč se před měřením izolačního odporu odpojují spotřebiče a elektronika?","Měřicí napětí by je mohlo poškodit a zkreslit výsledek.","Kvůli úspoře energie.","Protože by vypnul jistič.","Měří se na vypnutém obvodu."],
+[8,"Co se nasazuje na konec lanka před upevněním do šroubové svorky?","lisovací dutinka","cín","izolační páska","Cín pod tlakem teče a spoj se uvolní."],
+[8,"Kolik přepínačů č. 6 potřebujete pro schodišťové zapojení ze dvou míst?","dva","jeden","tři","Fáze na společnou svorku prvního, ze společné svorky druhého ke svítidlu."],
+[8,"Motor má štítek 230/400 V Δ/Y. Jak ho zapojíte na síť 3 × 400 V?","do hvězdy","do trojúhelníku","nejde připojit","Každé vinutí snese 230 V, ve hvězdě dostane 400/√3 = 230 V."],
+[8,"Motor má štítek 400/690 V Δ/Y. Jak ho zapojíte na síť 3 × 400 V?","do trojúhelníku","do hvězdy","přes autotransformátor","Vinutí snese 400 V, to dostane v trojúhelníku."],
+[8,"Jak změníte směr otáčení trojfázového asynchronního motoru?","prohozením dvou fází","prohozením N a PE","přepnutím z hvězdy do trojúhelníku","Změní se sled fází a smysl točivého pole."],
+[8,"Jak je v ovládacím obvodu zapojen přídržný kontakt stykače?","paralelně k tlačítku START","do série s tlačítkem STOP jako rozpínací","paralelně k tlačítku STOP","Stykač po puštění START drží přes vlastní kontakt."],
+[8,"Jaké je tlačítko STOP a jak je zapojeno?","rozpínací, do série s cívkou","spínací, paralelně","spínací, do série","Stisk přeruší obvod cívky."],
+[8,"Jak se zajistí, aby u reverzace nesepnuly oba stykače současně?","rozpínacím kontaktem druhého stykače v sérii s cívkou (blokováním)","tepelným relé","větším jističem","Současné sepnutí by způsobilo zkrat mezi fázemi."],
+[8,"Kde je zapojen kontakt 95-96 tepelného nadproudového relé?","v ovládacím obvodu do série s cívkou stykače","v hlavním obvodu motoru","paralelně k tlačítku START","Při přetížení rozepne a stykač odpadne."],
+[8,"Kolikrát se sníží záběrový proud při spouštění hvězda-trojúhelník?","na 1/3","na 1/2","na 1/√2","Proud i moment ve hvězdě klesnou na třetinu."],
+[8,"Jaký je typický záběrový proud asynchronního motoru s kotvou nakrátko?","4–8 × In","1,1 × In","20–30 × In","Proto se jistí charakteristikou C nebo D."],
+[8,"Co uděláte před prvním zapnutím nové instalace?","vizuální kontrolu, změření spojitosti PE a izolačního odporu","nic, stačí zapnout jistič","jen otestuji chránič tlačítkem","Měření před zapnutím odhalí chyby zapojení."],
+[9,"Jaký je správný postup kontroly spotřebiče?","prohlídka, měření, funkční zkouška, záznam","funkční zkouška a hned předání","měření bez prohlídky","Prohlídka odhalí nejvíce závad."],
+[9,"Jaká je mezní hodnota odporu ochranného vodiče spotřebiče s přívodem do 5 m?","0,3 Ω","3 Ω","30 Ω","+0,1 Ω na každých dalších 7,5 m, max. 1 Ω."],
+[9,"Jaký je minimální izolační odpor spotřebiče třídy II?","2 MΩ","0,3 MΩ","0,25 MΩ","Třída I 1 MΩ, třída III 0,25 MΩ."],
+[9,"Jaký je minimální izolační odpor spotřebiče třídy I (bez topných článků)?","1 MΩ","0,1 MΩ","10 kΩ","S topnými články 0,3 MΩ."],
+[9,"Jaký je mezní proud ochranným vodičem u spotřebiče třídy I?","3,5 mA","35 mA","0,35 A","Dotykový proud třídy II: 0,5 mA."],
+[9,"Podle které normy se kontroluje spotřebič po opravě?","ČSN EN 50678","ČSN EN 62305","ČSN 33 2130","Opakované kontroly: ČSN EN 50699."],
+[9,"Co uděláte se spotřebičem, který při kontrole nevyhověl?","označím ho, vyřadím z užívání a informuji uživatele","vrátím ho zákazníkovi bez komentáře","zapojím ho přes chránič a předám","Nebezpečný spotřebič se nesmí používat."],
+[9,"Jakým přívodem nahradíte poškozený přívod spotřebiče?","stejným nebo odolnějším typem stejného průřezu","nejtenčím dostupným","libovolným dvoužilovým kabelem","Spotřebič třídy I potřebuje žílu PE."],
+[9,"Co musí obsahovat protokol o kontrole a opravě?","identifikaci spotřebiče, výsledky měření, použité přístroje, závěr, datum a podpis","jen cenu opravy","jen podpis zákazníka","Protokol dokládá bezpečnost spotřebiče."],
+[9,"Co patří do poučení zákazníka po opravě?","co bylo opraveno, jak spotřebič bezpečně používat a na co si dát pozor","nic, stačí faktura","jen záruční podmínky","Poučení je součást hodnocení u zkoušky."],
+[9,"Smíte při opravě vyřadit tepelnou pojistku spotřebiče?","Ne, bezpečnostní prvky se nesmí vyřazovat.","Ano, pokud často vypíná.","Ano, se souhlasem zákazníka.","Nahrazuje se jen rovnocenným dílem."],
+[10,"Jaký je přibližně práh vnímání střídavého proudu 50 Hz?","0,5 mA","50 mA","5 A","Odpoutávací práh je asi 10 mA."],
+[10,"Co nastane při proudu nad práh odpoutání (asi 10 mA)?","Člověk se kvůli křeči svalů nedokáže pustit vodiče.","Člověk proud jen slabě vnímá.","Okamžitě nastane smrt.","Delší působení zvyšuje riziko fibrilace."],
+[10,"Která dráha proudu tělem je nejnebezpečnější?","přes srdce (např. levá ruka – nohy)","noha – noha","prst – prst jedné ruky","Proud procházející srdcem může vyvolat fibrilaci."],
+[10,"Jaký je první krok při záchraně osoby zasažené proudem NN?","přerušit proud (vypnout) a dbát vlastní bezpečnosti","hned zahájit masáž srdce","polít postiženého vodou","Bez přerušení proudu ohrozíte sebe."],
+[10,"Jak postupujete u úrazu na vysokém napětí?","Nepřibližuji se kvůli krokovému napětí, volám pomoc a čekám na vypnutí.","Odtáhnu postiženého suchým dřevem.","Přistoupím a zkontroluji dýchání.","Na VN nelze bezpečně vyprostit bez vypnutí."],
+[10,"Jaký je poměr stlačení a vdechů při KPR dospělého?","30 : 2","15 : 1","5 : 1","Tempo 100–120/min, hloubka 5–6 cm."],
+[10,"Jaké je telefonní číslo zdravotnické záchranné služby?","155","150","158","150 hasiči, 158 policie, 112 jednotné evropské."],
+[10,"Musí postižený po úrazu elektřinou k lékaři, i když nemá potíže?","Ano, vždy. Poruchy srdečního rytmu se mohou objevit později.","Ne, pokud nemá popáleniny.","Jen pokud ztratil vědomí.","Úraz elektřinou se vždy řeší s lékařem."],
+[10,"Jak ošetříte popáleninu od elektrického proudu?","chladím čistou vodou a sterilně kryji","propíchnu puchýře a namažu","posypu moukou","Puchýře se nepropichují."],
+[10,"Jaké jsou účinky proudu na organismus?","tepelné, elektrolytické a biologické","jen tepelné","jen mechanické","Biologické = křeče, poruchy srdečního rytmu."],
+[11,"Jakým předpisem je 194/2022 Sb.?","nařízením vlády","vyhláškou ministerstva","zákonem","Nahradilo vyhlášku 50/1978 Sb."],
+[11,"Od kdy platí nařízení vlády 194/2022 Sb.?","od 1. 7. 2022","od 1. 1. 2022","od 1. 1. 2023","Současně se zákonem 250/2021 Sb."],
+[11,"Ke kterému zákonu je NV 194/2022 Sb. prováděcím předpisem?","zákon 250/2021 Sb.","zákon 262/2006 Sb. (zákoník práce)","zákon 458/2000 Sb.","Zákon o bezpečnosti práce v souvislosti s provozem VTZ."],
+[11,"Které kategorie osob zná NV 194/2022 Sb.?","osoba poučená a osoba znalá (elektrotechnik, vedoucí elektrotechnik, revizní technik)","pracovník seznámený, poučený, znalý","laik, technik, inženýr","Staré kategorie byly ve vyhlášce 50/1978 Sb."],
+[11,"Kdo je podle NV 194/2022 Sb. elektrotechnik?","osoba znalá pro samostatnou činnost (§ 6)","osoba znalá pro řízení činnosti","revizní technik","Vedoucí elektrotechnik = řízení činnosti (§ 7)."],
+[11,"Z jakých částí se skládá zkouška podle § 9 NV 194/2022 Sb.?","písemný test (min. 10 otázek) a ústní pohovor","jen ústní pohovor","praktická zkouška a test o 50 otázkách","Praktická část v nařízení není."],
+[11,"Kdo je předsedou zkušební komise podle NV 194/2022 Sb.?","revizní technik","zaměstnavatel","lékař pracovnělékařských služeb","Komise je tříčlenná."],
+[11,"Jak často se musí školit elektrotechnici, když vnitřní předpis interval nestanoví?","nejméně jednou ročně","jednou za 3 roky","jednou za 5 let","§ 3 odst. 4."],
+[11,"Za koho je považován pracovník znalý podle bývalé vyhlášky 50/1978 Sb.?","za elektrotechnika","za vedoucího elektrotechnika","za osobu poučenou","§ 10 přechodné ustanovení."],
+[11,"Jak dlouhou praxi potřebuje vedoucí elektrotechnik pro rozsah E2A?","2 roky","6 měsíců","10 let","E2A a E3A 2 roky, E1A 3 roky, E1B 4 roky."],
+[11,"Do jakého napětí může profesní kvalifikace nahradit elektrotechnické vzdělání elektrotechnika?","do 1 kV AC / 1,5 kV DC v objektech bez nebezpečí výbuchu","bez omezení napětí","jen do 50 V","§ 6 odst. 7."],
+[11,"Jak dlouho se uchovává protokol o zkoušce?","nejméně 6 a nejdéle 7 let","1 rok","trvale","§ 9 odst. 4 písm. c)."],
+[11,"Kdo vyhotovuje zápis o poučení osoby poučené?","osoba znalá","sama osoba poučená","úřad práce","§ 4 odst. 3."],
+[11,"Kdo provádí revize vyhrazených elektrických zařízení?","revizní technik s platným osvědčením","každý elektrotechnik","vedoucí elektrotechnik bez osvědčení","§ 5 odst. 3."],
+[11,"Za koho je podle přechodného ustanovení považován pracovník pro řízení činnosti prováděné dodavatelským způsobem?","za vedoucího elektrotechnika","za elektrotechnika","za revizního technika","§ 10 písm. b)."]
+];
+const CARDS=[
+["Vysvětlete rozdíl mezi obsluhou a prací na elektrickém zařízení.","Obsluha mění provozní stav (spínání, ovládání, sledování) a zvládne ji i osoba poučená. Práce je zásah do zařízení (montáž, oprava, údržba, měření) a vyžaduje kvalifikaci, typicky elektrotechnika."],
+["Popište pět pravidel pro práci bez napětí.","1. vypnout a odpojit, 2. zajistit proti opětovnému zapnutí, 3. ověřit beznapěťový stav, 4. uzemnit a zkratovat, 5. zakrýt nebo oddělit sousední živé části. Po skončení obráceně."],
+["Jaký je rozdíl mezi sítí TN-C a TN-S? Kde se dělí PEN?","TN-C má sloučený PEN, TN-S oddělené PE a N. PEN se dělí v místě rozdělení (obvykle hlavní domovní rozvaděč). Za rozdělením se PE a N už nesmí spojit a PEN nesmí procházet chráničem."],
+["Jak funguje proudový chránič a co neumí?","Součtový transformátor porovnává proudy v L a N. Při rozdílu (proud odtéká přes PE nebo člověka) vypne. Neumí chránit proti přetížení a zkratu ani proti dotyku L a N současně."],
+["Jmenujte prostředky základní ochrany a ochrany při poruše.","Základní: izolace, kryty a přepážky, zábrany, poloha. Při poruše: ochranné uzemnění a pospojování, automatické odpojení, přídavná izolace, ochranné oddělení."],
+["Vysvětlete třídy ochrany 0, I, II, III.","0 jen základní izolace, I PE na neživých částech, II dvojitá nebo zesílená izolace (dvojitý čtverec), III napájení SELV/PELV."],
+["Jak dimenzujete vedení a jistič?","Zatížitelnost podle uložení, teploty a seskupení, úbytek napětí (3 % světlo, 5 % ostatní), zkratová odolnost, mechanická pevnost. Koordinace IB ≤ In ≤ Iz a I2 ≤ 1,45 Iz."],
+["Jaký je rozdíl mezi charakteristikami jističů B, C, D?","Násobek In pro okamžité vypnutí: B 3–5×, C 5–10×, D 10–20×. B domácnosti, C motory a svítidla, D transformátory a velké motory."],
+["Jak zapojíte zásuvku a svítidlo?","Zásuvka: PE kolík nahoře, L levá dutinka, N pravá. Svítidlo: vypínač spíná L, objímka L na střed, N na závit, PE na kostru svítidla třídy I."],
+["Z čeho se skládá LPS a k čemu jsou SPD typu 1, 2, 3?","Vnější LPS: jímače, svody, uzemnění. Vnitřní: pospojování a dostatečná vzdálenost. SPD 1 na vstupu (10/350), 2 v rozvaděčích (8/20), 3 u spotřebičů."],
+["Jak změříte izolační odpor obvodu a jaká je mez?","Obvod vypnout, odpojit spotřebiče, měřit 500 V DC mezi vodiči a proti PE. Mez ≥ 1 MΩ (SELV/PELV 250 V, 0,5 MΩ)."],
+["Jak ověříte, že jistič vypne včas?","Změřím impedanci smyčky Zs a porovnám se Zs,max = U0/Ia. Pro B16: 230/80 = 2,87 Ω, s rezervou asi 1,9 Ω."],
+["Jak zapojíte asynchronní motor a změníte smysl otáčení?","Podle štítku a sítě do Y nebo Δ (230/400 V na 3×400 V do Y), PE na kostru, jištění C/D nebo spouštěčem. Směr změním prohozením dvou fází."],
+["Popište ovládací obvod stykače se samodržením.","L → tepelné relé 95-96 → STOP (NC) → START (NO) paralelně s K1 13-14 → cívka A1-A2 → N. U reverzace navíc vzájemné blokování NC kontakty."],
+["Jak postupujete při kontrole spotřebiče po opravě?","Prohlídka, měření R_PE (≤ 0,3 Ω), R_iso (I ≥ 1 MΩ, II ≥ 2 MΩ), unikajícího proudu (I ≤ 3,5 mA), funkční zkouška, protokol, poučení zákazníka."],
+["Jak poskytnete první pomoc při úrazu elektřinou?","Vlastní bezpečnost, přerušit proud (VN nepřibližovat), volat 155, zkontrolovat vědomí a dýchání, KPR 30:2 a AED, chladit popáleniny, vždy k lékaři."],
+["Jaké kategorie osob zavádí NV 194/2022 Sb.?","Osoba poučená (§ 4), osoba znalá (§ 5): elektrotechnik (§ 6), vedoucí elektrotechnik (§ 7), revizní technik (§ 8). Zkouška: test min. 10 otázek a ústní pohovor u tříčlenné komise."],
+["Jaké druhy technické dokumentace znáte?","Projektová dokumentace, přehledové a obvodové schéma, instalační výkres, dokumentace skutečného provedení, návody výrobce, revizní zprávy, místní provozní bezpečnostní předpis."]
+];
+const P={
+odtah:{n:1,name:"Odtah spalin a přívod vzduchu",cat:"Spalování",
+ fn:"Odvádí spaliny ven a přivádí spalovací vzduch zvenku. Kotel je uzavřený spotřebič (typ C), takže nebere vzduch z místnosti.",
+ how:["Koaxiální trubka 60/100 mm: vnitřní trubkou odcházejí spaliny, mezikružím proudí čerstvý vzduch, který se od spalin předehřívá.","Spaliny kondenzačního kotle mají jen asi 40–80 °C, proto je odtah z plastu (PP), ne z plechu.","Vodorovný odtah se klade se spádem asi 3° zpět ke kotli, aby kondenzát stékal do sifonu."],
+ el:"Na odtahu se elektricky nic neměří. Ucpaný nebo netěsný odtah se ale projeví u elektroniky: ventilátor nedosáhne otáček, klesne ionizační proud nebo kotel hlásí poruchu plamene.",
+ err:["Ucpání (hnízdo, námraza) → porucha ventilátoru nebo plamene","Recirkulace spalin do sání → nestabilní plamen, zhasínání","Netěsné spoje → kondenzát a spaliny v místnosti"]},
+ventilator:{n:2,name:"Modulovaný ventilátor",cat:"Spalování · elektro",
+ fn:"Dodává spalovací vzduch a jeho otáčkami se řídí výkon kotle.",
+ how:["Na sání je venturi trubice. Proudící vzduch podtlakem přisává plyn z plynového ventilu a vzniká směs (premix).","Vyšší otáčky = víc vzduchu = víc plynu = vyšší výkon. Řídicí deska otáčky plynule mění (modulace).","Před zapálením ventilátor provětrá spalovací komoru, po vypnutí hořáku dobíhá."],
+ el:"Typicky EC (DC) motor napájený z desky, řízený PWM signálem. Zpětnou vazbu dává Hallův snímač otáček (tachosignál). Měří se: napájení, přítomnost PWM a tachosignálu. Když ventilátor běží, ale deska nevidí otáčky, je vadný Hallův snímač nebo kabel.",
+ err:["Opotřebená ložiska → hluk, vibrace","Ventilátor nedosáhne požadovaných otáček → blokace","Vadný snímač otáček nebo konektor"]},
+plynventil:{n:3,name:"Plynový ventil (kombinovaná armatura)",cat:"Plyn · elektro · bezpečnost",
+ fn:"Bezpečně otevírá a zavírá přívod plynu k hořáku a dávkuje plyn podle množství vzduchu.",
+ how:["Má dva elektromagnetické uzávěry v sérii (V1, V2). Plyn proteče jen tehdy, když jsou otevřené oba.","Pneumatický poměrový regulátor drží poměr plyn/vzduch: čím větší podtlak ve venturi, tím víc plynu.","Seřízení (CO₂ ve spalinách) se dělá šroubem na ventilu jen s analyzátorem spalin."],
+ el:"Cívky napájí řídicí deska (podle výrobce 230 V nebo nízké napětí). Při závadě změřte bez napětí a s odpojeným konektorem odpor cívek ohmmetrem a porovnejte s hodnotou výrobce. Přerušená cívka má nekonečný odpor.",
+ err:["Přerušená cívka → kotel jiskří, ale plyn nepřijde (porucha plamene)","Netěsnost uzávěru","Špatné seřízení → vysoké CO, nestabilní plamen"],
+ warn:"Zásah do plynové části smí udělat jen osoba s oprávněním pro plynová zařízení."},
+horak:{n:4,name:"Premixový hořák",cat:"Spalování",
+ fn:"Na jeho povrchu hoří předem namíchaná směs plynu a vzduchu.",
+ how:["Válec nebo deska z nerezové perforované plechoviny či kovové tkaniny. Plamen je nízký, rozložený po celém povrchu.","Výkon lze modulovat zhruba v poměru 1:5 až 1:10, takže kotel tolik necykluje.","Hořák je zabudovaný ve víku spalovací komory, utěsněný těsněním."],
+ el:"Kostra hořáku je protielektroda pro ionizaci. Proto musí být dobře spojená s ochranným vodičem a kostrou kotle.",
+ err:["Zanesení nebo propálení povrchu → nestabilní plamen","Poškozené těsnění víka (po otevření se vždy mění) → únik spalin","Hlučné spalování (rezonance)"]},
+vymenik:{n:5,name:"Primární kondenzační výměník",cat:"Hydraulika · spalování",
+ fn:"Předává teplo ze spalin do topné vody a díky kondenzaci využije i teplo vodní páry ve spalinách.",
+ how:["Spaliny se ochladí pod rosný bod (u zemního plynu asi 55 °C). Vodní pára zkondenzuje a uvolní latentní teplo.","Kondenzace funguje jen při nízké teplotě zpátečky. Proto jsou kondenzační kotle nejúčinnější s podlahovým topením a ekvitermní regulací.","Účinnost vztažená k výhřevnosti může být přes 100 % (až asi 108 %), protože výhřevnost nepočítá s teplem kondenzace."],
+ el:"Na výměníku sedí havarijní termostat a NTC čidla výstupu a zpátečky. Jejich hodnoty prozradí, jestli výměníkem teče voda.",
+ err:["Zanesení ze strany spalin → nižší výkon, porucha","Vodní kámen nebo kal ze strany vody → přehřátí, hluk (bublání)","Netěsnost → voda ve spalovací komoře"]},
+zapal:{n:6,name:"Zapalovací elektroda a zapalovač",cat:"Elektro · spalování",
+ fn:"Vytvoří jiskry, které zapálí směs na hořáku.",
+ how:["Zapalovací transformátor (zapalovač) z napájení desky vytváří vysokonapěťové impulzy (řádově kV).","Jiskra přeskakuje mezi hroty elektrody nebo mezi elektrodou a hořákem. Vzdálenost je asi 3–4 mm podle výrobce.","Jiskření trvá jen během bezpečnostní doby zapalování."],
+ el:"Na sekundární (vysokonapěťové) straně nikdy neměřte multimetrem. Kontroluje se jiskra pohledem, stav VN kabelu a koncovky, prasklá keramika elektrody (jiskra přeskočí jinam) a primární napájení zapalovače z desky.",
+ err:["Opotřebené nebo ohnuté hroty → slabá nebo žádná jiskra","Prasklá keramika → přeskok mimo hořák","Vadný zapalovač nebo VN kabel"],
+ warn:"Vysoké napětí: při zkoušce jiskry se nedotýkejte elektrody ani kabelu."},
+ionizace:{n:7,name:"Ionizační elektroda (hlídání plamene)",cat:"Elektro · bezpečnost",
+ fn:"Hlídá, jestli hoří plamen. Bez plamene nesmí zůstat plynový ventil otevřený.",
+ how:["Plamen obsahuje ionty, a proto vede proud. Deska přivede na elektrodu střídavé napětí proti kostře hořáku.","Elektroda je malá a hořák velký, takže plamen proud usměrní. Teče malý stejnosměrný proud v jednotkách µA. Deska vyhodnocuje právě tuto stejnosměrnou složku.","Když proud do bezpečnostní doby (několik sekund) nenaběhne nebo za provozu zmizí, deska zavře plynový ventil. Po několika neúspěšných pokusech kotel přejde do blokace a čeká na ruční odblokování."],
+ el:"Ionizační proud se měří DC mikroampérmetrem zapojeným do série s elektrodou. Typicky 2–10 µA, minimum podle výrobce asi 1 µA. U fázově závislých kotlů záleží na polaritě L a N v přívodu. Při záměně kotel zapálí a hned zhasne. Ionizace potřebuje i kvalitní spojení kostry s PE.",
+ err:["Zoxidovaná nebo zanesená elektroda → nízký proud, zhasínání","Záměna L a N u fázově závislého kotle → blokace hned po zapálení","Chybějící nebo špatné uzemnění kotle","Některé kotle používají jednu elektrodu pro zapalování i ionizaci"]},
+stb:{n:8,name:"Havarijní termostat (STB)",cat:"Bezpečnost · elektro",
+ fn:"Bezpečnostní omezovač teploty. Při přehřátí výměníku (asi 95–110 °C) odpojí plynový ventil nezávisle na regulaci.",
+ how:["Je zapojený v bezpečnostním řetězci napájení plynového ventilu.","Po vybavení zůstane kotel v blokaci, dokud se příčina neodstraní a kotel se ručně neodblokuje.","Některé kotle mají navíc pojistku teploty spalin."],
+ el:"Je to rozpínací kontakt. V normálním stavu je sepnutý (odpor prakticky 0 Ω), po vybavení rozpojený. Měří se ohmmetrem bez napětí. Havarijní termostat se nikdy nesmí přemostit.",
+ err:["Vybavuje kvůli skutečnému přehřátí: nefunkční čerpadlo, vzduch, zavřené ventily, zanesený výměník","Vadný kontakt → falešná porucha"],
+ warn:"Přemostění havarijního termostatu je hrubé porušení bezpečnosti. Hrozí přehřátí a výbuch páry."},
+ntc:{n:9,name:"Teplotní čidla NTC",cat:"Elektro · regulace",
+ fn:"Měří teplotu výstupu, zpátečky a teplé vody (případně venku). Podle nich deska řídí výkon.",
+ how:["NTC termistor: s rostoucí teplotou odpor klesá.","Typické čidlo má asi 10 kΩ při 25 °C, asi 3,6 kΩ při 50 °C a asi 1,2 kΩ při 80 °C. Přesná křivka je v návodu výrobce.","Rozdíl teplot výstup–zpátečka ukazuje, jestli výměníkem teče dost vody. Venkovní čidlo umožňuje ekvitermní regulaci."],
+ el:"Odpojte konektor, změřte odpor ohmmetrem a porovnejte s tabulkou výrobce pro teplotu změřenou teploměrem. Nekonečný odpor = přerušené čidlo, téměř 0 Ω = zkrat. Obojí kotel hlásí jako poruchu čidla.",
+ err:["Přerušení nebo zkrat → chybový kód, kotel nejede","Posunutá charakteristika → přetápění nebo nedotápění","Špatný kontakt čidla s trubkou → zpožděná regulace"]},
+cerpadlo:{n:10,name:"Oběhové čerpadlo",cat:"Hydraulika · elektro",
+ fn:"Pohání topnou vodu výměníkem a topnou soustavou.",
+ how:["Mokroběžné čerpadlo s EC motorem a proměnnými otáčkami.","Po vypnutí hořáku dobíhá, aby odvedlo zbytkové teplo z výměníku.","Antiblokační funkce kotle protočí čerpadlo jednou za čas i v létě."],
+ el:"Napájení 230 V z desky, otáčky řídí PWM signál. Měří se přítomnost 230 V a PWM. U starších AC čerpadel i odpor vinutí a rozběhový kondenzátor.",
+ err:["Zablokované po odstávce → přehřátí, havarijní termostat","Vzduch v čerpadle → hluk, nedostatečný průtok","Vadná elektronika čerpadla"]},
+odvzdusneni:{n:11,name:"Automatický odvzdušňovací ventil",cat:"Hydraulika",
+ fn:"Vypouští vzduch z topné vody.",
+ how:["Uvnitř je plovák. Když se nahromadí vzduch, plovák klesne a otevře ventilek.","Čepička musí být za provozu povolená, jinak vzduch neodchází."],
+ el:"Pozor na kapající ventil: voda může stékat na elektroniku pod ním.",
+ err:["Kapání vody (nečistota pod sedlem) → riziko pro elektroniku","Utažená čepička → vzduch v soustavě, hluk, přehřívání"]},
+trojcest:{n:12,name:"Trojcestný (přepínací) ventil",cat:"Hydraulika · elektro",
+ fn:"Přepíná horkou vodu z výměníku buď do topení, nebo do deskového výměníku teplé vody.",
+ how:["Teplá voda má přednost: když otevřete kohoutek, ventil přepne na ohřev TV a topení dočasně stojí.","Pohon je malý motor (synchronní nebo krokový) řízený deskou."],
+ el:"Měří se napájení motoru z desky v okamžiku přepnutí (podle výrobce 230 V nebo nízké napětí) a odpor vinutí motoru.",
+ err:["Zaseknutý v poloze topení → teplá voda neteče teplá","Zaseknutý v poloze TV nebo netěsný → radiátory hřejí i v létě","Netěsná ucpávka → kapání"]},
+deskovy:{n:13,name:"Deskový výměník teplé vody",cat:"Hydraulika",
+ fn:"Průtokově ohřívá pitnou vodu topnou vodou z primárního výměníku. Obě vody se nesmísí.",
+ how:["Pájené nerezové desky, mezi nimiž střídavě proudí topná a pitná voda v protiproudu.","Velká plocha na malém prostoru umožní ohřev vody už při průtoku."],
+ el:"Elektricky nic. Výsledek ohřevu hlídá NTC čidlo teplé vody.",
+ err:["Vodní kámen na straně pitné vody → slabý průtok, kolísání teploty","Propojení okruhů (prasklá deska) → tlak v soustavě roste při odběru vody"]},
+prutok:{n:14,name:"Snímač průtoku teplé vody",cat:"Elektro · regulace",
+ fn:"Pozná, že někdo otevřel kohoutek, a dá kotli povel k ohřevu teplé vody.",
+ how:["Turbínka s magnetem se roztočí proudící vodou. Hallův snímač z jejích otáček dělá impulzy.","Frekvence impulzů odpovídá průtoku. Kotel reaguje od minimálního průtoku (asi 2 l/min)."],
+ el:"Napájení z desky typicky 5 V DC, výstup jsou impulzy. Měří se napájení a změna výstupního signálu při otevření vody (multimetr ukáže střední hodnotu, osciloskop impulzy).",
+ err:["Zanesené sítko nebo turbínka → kotel na TV nereaguje","Vadný Hallův snímač","Kotel nespíná při malém průtoku (úsporné perlátory)"]},
+expanzni:{n:15,name:"Expanzní nádoba",cat:"Hydraulika · bezpečnost",
+ fn:"Vyrovnává zvětšení objemu vody při ohřevu, aby tlak v soustavě příliš nestoupal.",
+ how:["Membrána dělí nádobu na vodní a plynovou část (dusík nebo vzduch).","Předtlak plynové strany bývá asi 0,75–1 bar. Kontroluje se pneuměřičem, když je soustava bez tlaku (voda odpuštěná nebo kotel oddělený).","V kotli bývá nádoba 6–10 l. Větší soustava potřebuje přídavnou."],
+ el:"Elektricky nic. Vadná nádoba se ale projeví na snímači tlaku: velké výkyvy tlaku mezi studeným a teplým stavem.",
+ err:["Ztráta předtlaku → tlak v soustavě kolísá, odkapává pojistný ventil","Protržená membrána → voda na ventilku plynové strany"]},
+pojistny:{n:16,name:"Pojistný ventil 3 bar",cat:"Bezpečnost",
+ fn:"Při překročení 3 bar odpustí vodu a chrání kotel i soustavu před roztržením.",
+ how:["Pružinový ventil, výstup musí být sveden do odpadu přes viditelnou nálevku.","Nesmí se zaslepit, vyřadit ani nahradit zátkou."],
+ el:"Elektricky nic.",
+ err:["Odkapává → zkontrolovat expanzní nádobu a netěsný napouštěcí ventil","Nečistota pod sedlem → trvalé kapání"],
+ warn:"Pojistný ventil se nikdy nezaslepuje."},
+tlak:{n:17,name:"Snímač tlaku vody",cat:"Elektro · bezpečnost",
+ fn:"Hlídá tlak v topné soustavě a zablokuje kotel, když v něm chybí voda.",
+ how:["Provozní tlak za studena bývá 1–2 bar (obvykle 1,2–1,5 bar).","Pod asi 0,5–0,8 bar kotel nezapálí a hlásí nízký tlak.","Starší kotle mají tlakový spínač (kontakt), novější elektronický snímač s analogovým výstupem."],
+ el:"Elektronický snímač: napájení typicky 5 V DC, výstupní napětí úměrné tlaku. Měří se napájení a výstup, porovnává se s ručním manometrem. Tlakový spínač se měří ohmmetrem jako kontakt.",
+ err:["Únik vody ze soustavy → opakovaně nízký tlak","Vadný snímač → kotel hlásí nízký tlak, přestože manometr ukazuje správnou hodnotu"]},
+sifon:{n:18,name:"Sifon kondenzátu",cat:"Spalování · hydraulika",
+ fn:"Odvádí kondenzát do kanalizace a vodní uzávěrou brání úniku spalin do místnosti.",
+ how:["Kondenzát je kyselý (pH asi 3–5). Odvádí se plastovým potrubím, u větších výkonů přes neutralizační box.","Sifon musí být vždy naplněný vodou. Po servisu ho před spuštěním doplňte."],
+ el:"Některé kotle mají v sifonu nebo spalovací komoře hlídání hladiny kondenzátu. Ucpaný odvod se pak projeví jako porucha.",
+ err:["Ucpaný sifon → kondenzát zaplaví výměník, kotel hlásí poruchu plamene","Prázdný sifon → spaliny v místnosti","Zamrzlý odvod venku"]},
+elektronika:{n:19,name:"Řídicí elektronika a displej",cat:"Elektro · řízení",
+ fn:"Řídí celý kotel: startovací sekvenci, hlídání plamene, modulaci výkonu, čerpadlo, trojcestný ventil a poruchová hlášení.",
+ how:["Napájení 230 V / 50 Hz. Kotel se připojuje pevně přes vypínač odpojující oba póly, nebo vidlicí do zásuvky, přívod je jištěný a kotel je spojený s PE.","Na desce jsou tavné pojistky (typicky T 2–4 A) a zdroj nízkého napětí pro čidla.","Prostorový termostat se připojuje jako beznapěťový kontakt (spíná/rozpíná) nebo komunikační sběrnicí (např. OpenTherm, nízké napětí, dva vodiče)."],
+ el:"Kontroluje se napájení 230 V a polarita L/N, spojitost PE, pojistky na desce, napětí pro čidla. Na svorky prostorového termostatu se nikdy nepřivádí 230 V. Chybový kód na displeji určuje, kde začít hledat.",
+ err:["Přepálená pojistka (zkrat ve spotřebiči: čerpadlo, ventilátor, zapalovač)","Vlhkost na desce (kapající odvzdušňovač) → nepředvídatelné chování","Záměna L a N → porucha ionizace","Přepětí po bouřce → vadná deska"],
+ warn:"Před sejmutím krytu elektroniky: vypnout, zajistit, ověřit beznapěťový stav."}
+};
+const SEQ=[
+ {t:"Požadavek na teplo",p:["elektronika","prutok"],f:{},d:"Prostorový termostat sepne kontakt (topení), nebo snímač průtoku pozná otevřený kohoutek (teplá voda). Když kotel na požadavek vůbec nereaguje, zkontrolujte termostat, jeho kabel a snímač průtoku."},
+ {t:"Kontrola bezpečnostních prvků",p:["tlak","stb","ntc","ionizace"],f:{},d:"Deska ověří, že je tlak vody v pořádku, havarijní termostat je sepnutý, čidla mají hodnoty v rozsahu a ionizace nehlásí plamen tam, kde žádný není (falešný plamen = porucha)."},
+ {t:"Rozběh čerpadla a přestavení ventilu",p:["cerpadlo","trojcest"],f:{pump:1,w:"heat"},d:"Čerpadlo se rozběhne a trojcestný ventil se přestaví na topení nebo teplou vodu."},
+ {t:"Předvětrání",p:["ventilator","odtah"],f:{pump:1,fan:1,w:"heat"},d:"Ventilátor naběhne na startovací otáčky a provětrá spalovací komoru. Deska čeká na tachosignál. Když otáčky nedosáhnou požadované hodnoty, start skončí poruchou ventilátoru."},
+ {t:"Zapalování",p:["zapal","plynventil"],f:{pump:1,fan:1,w:"heat",spark:1,gas:1},d:"Zapalovač jiskří a současně se otevřou oba uzávěry plynového ventilu. Začíná bezpečnostní doba (několik sekund)."},
+ {t:"Hlídání plamene",p:["ionizace","horak"],f:{pump:1,fan:1,w:"heat",gas:1,flame:1},d:"Ionizační proud musí naběhnout během bezpečnostní doby. Když ne, ventil se zavře a start se opakuje. Po několika neúspěšných pokusech kotel přejde do blokace. Jiskra je, ale plamen ne → plynový ventil, přívod plynu, seřízení. Plamen je, ale zhasne → ionizace, polarita L/N, uzemnění."},
+ {t:"Modulace výkonu",p:["ventilator","ntc","horak","plynventil"],f:{pump:1,fan:1,w:"heat",gas:1,flame:1},d:"Deska porovnává teplotu z NTC čidel s požadovanou hodnotou a podle toho mění otáčky ventilátoru. Plynový ventil přidává plyn úměrně vzduchu."},
+ {t:"Vypnutí a doběh",p:["plynventil","ventilator","cerpadlo"],f:{pump:1,fan:1,w:"heat"},d:"Po dosažení teploty se plynový ventil zavře a plamen zhasne. Ventilátor dovětrá komoru a čerpadlo ještě chvíli dobíhá, aby odvedlo teplo z výměníku."}
+];
+const LESSONS=[
+ {id:"k1",k:1,t:"Základy elektrotechniky"},{id:"k2",k:2,t:"Bezpečnost při obsluze a práci"},
+ {id:"k3",k:3,t:"Ochrana před úrazem elektrickým proudem"},{id:"k4",k:4,t:"Jištění a kladení vedení"},
+ {id:"k5",k:5,t:"Ochrana před bleskem a přepětím"},{id:"k6",k:6,t:"Technická dokumentace a normy"},
+ {id:"k7",k:7,t:"Měření elektrických veličin"},{id:"k8",k:8,t:"Montáž a zapojování"},
+ {id:"k9",k:9,t:"Kontroly a opravy spotřebičů"},{id:"k10",k:10,t:"První pomoc při úrazu elektřinou"},
+ {id:"nv",k:11,t:"Nařízení vlády 194/2022 Sb."}
+];
+const ZAV=[
+ {t:"Kotel nereaguje, displej nesvítí",
+  c:["Chybí napájení 230 V (vypnutý jistič, chránič, vytažená vidlice)","Přepálená pojistka na řídicí desce","Zkrat v některém spotřebiči kotle, který pojistku znovu přepálí","Vadný zdroj na desce"],
+  s:["Zkontrolujte jistič a chránič v rozvaděči. Vybavený chránič může znamenat svod v kotli (vlhkost, kapající odvzdušňovač).","Změřte 230 V na svorkách přívodu kotle (L-N, L-PE).","Vypněte, ověřte beznapětí a zkontrolujte pojistky na desce ohmmetrem.","Když je pojistka přepálená, před výměnou hledejte zkrat: odpojte postupně čerpadlo, ventilátor, zapalovač a trojcestný ventil a změřte jejich odpor a izolační stav.","Když napájení i pojistky jsou v pořádku a displej nesvítí, je vadná deska nebo displej."],
+  p:["elektronika","odvzdusneni"]},
+ {t:"Kotel startuje, ale nejiskří",
+  c:["Vadný zapalovač (zapalovací transformátor)","Poškozený vysokonapěťový kabel nebo koncovka","Prasklá keramika nebo špatná vzdálenost hrotů elektrody","Deska nenapájí zapalovač"],
+  s:["Pozorujte průzorem nebo poslechem, jestli jiskra vůbec vzniká.","Vypněte a prohlédněte elektrodu: vzdálenost hrotů (asi 3–4 mm), prasklá keramika, oxidace.","Zkontrolujte VN kabel a koncovku (praskliny, stopy přeskoků).","Změřte napájení primáru zapalovače z desky v okamžiku zapalování. Na VN straně multimetrem nikdy neměřte.","Je napájení, ale není jiskra → vyměnit zapalovač."],
+  p:["zapal","elektronika"]},
+ {t:"Jiskří, ale plamen nenaskočí",
+  c:["Zavřený plynový kohout nebo nízký tlak plynu","Přerušená cívka plynového ventilu nebo chybí napájení cívek","Ucpaný odtah nebo sání, ventilátor nedá dost vzduchu","Špatné seřízení plynového ventilu"],
+  s:["Ověřte, že je otevřený plynový kohout a že ostatní plynové spotřebiče fungují.","Vypněte, odpojte konektor plynového ventilu a změřte odpor cívek. Porovnejte s hodnotou výrobce.","Změřte, jestli deska při zapalování dává na ventil napětí.","Zkontrolujte odtah a sání (ucpání, námraza).","Měření tlaku plynu a seřízení CO₂ přenechte osobě s oprávněním pro plynová zařízení."],
+  p:["plynventil","odtah","ventilator"]},
+ {t:"Zapálí a za pár sekund zhasne (porucha plamene)",
+  c:["Záměna L a N v přívodu u fázově závislého kotle","Špatné spojení kotle s ochranným vodičem PE","Zoxidovaná nebo zanesená ionizační elektroda","Recirkulace spalin, ucpaný sifon kondenzátu"],
+  s:["Zkontrolujte polaritu přívodu: L musí být na svorce L. U zásuvky stačí otočit vidlici.","Změřte spojitost PE mezi přívodem a kostrou kotle i hořáku.","Změřte ionizační proud DC mikroampérmetrem v sérii s elektrodou. Typicky 2–10 µA, pod asi 1 µA kotel zhasne.","Očistěte nebo vyměňte ionizační elektrodu, zkontrolujte její vzdálenost od hořáku.","Zkontrolujte sifon kondenzátu a odtah spalin."],
+  p:["ionizace","elektronika","sifon","odtah"]},
+ {t:"Kotel hlásí nízký tlak vody",
+  c:["Únik vody ze soustavy nebo odkapávající pojistný ventil","Ztráta předtlaku v expanzní nádobě","Vadný snímač tlaku"],
+  s:["Porovnejte tlak na manometru s hodnotou na displeji. Za studena má být 1–2 bar.","Když je tlak opravdu nízký, doplňte vodu a hledejte únik (radiátory, spoje, pojistný ventil).","Opakované odpouštění pojistného ventilu při ohřevu = zkontrolovat předtlak expanzní nádoby (bez tlaku vody, asi 0,75–1 bar).","Když manometr ukazuje správný tlak a kotel hlásí chybu, změřte napájení snímače (typicky 5 V DC) a jeho výstup."],
+  p:["tlak","pojistny","expanzni"]},
+ {t:"Přehřátí, vybavil havarijní termostat",
+  c:["Nefunkční nebo zablokované čerpadlo","Vzduch v soustavě","Zavřené ventily u kotle nebo na radiátorech","Vadné NTC čidlo, zanesený výměník"],
+  s:["Zjistěte, jestli čerpadlo běží (zvuk, teplota, rozdíl teplot výstup–zpátečka).","Změřte na čerpadle napájení 230 V a PWM signál. Zablokované čerpadlo po odstávce protočte.","Odvzdušněte soustavu a zkontrolujte, že čepička automatického odvzdušňovače je povolená.","Změřte odpor NTC čidel a porovnejte s tabulkou pro skutečnou teplotu.","Havarijní termostat nikdy nepřemosťujte. Odblokujte ho až po odstranění příčiny."],
+  p:["cerpadlo","odvzdusneni","ntc","stb","vymenik"]},
+ {t:"Topení jde, ale neohřívá teplou vodu",
+  c:["Snímač průtoku nepozná odběr (zanesené sítko, vadný Hallův snímač)","Trojcestný ventil nepřepne na teplou vodu","Zanesený deskový výměník","Vadné NTC čidlo teplé vody"],
+  s:["Otevřete kohoutek naplno. Reaguje kotel vůbec (displej ukáže ohřev TV)?","Nereaguje → změřte napájení snímače průtoku (typicky 5 V DC) a změnu výstupního signálu při otevření vody. Vyčistěte sítko.","Reaguje, ale voda je studená a radiátory hřejí → trojcestný ventil nepřepíná. Změřte napájení motoru v okamžiku přepnutí.","Voda je vlažná a teplota kolísá → deskový výměník zanesený vodním kamenem.","Zkontrolujte NTC čidlo teplé vody."],
+  p:["prutok","trojcest","deskovy","ntc"]},
+ {t:"Radiátory hřejí, i když se jen ohřívá voda (nebo v létě)",
+  c:["Trojcestný ventil zůstává v mezipoloze nebo netěsní"],
+  s:["Ověřte, že deska dává povel k přepnutí (napájení motoru ventilu).","Zkontrolujte motor ventilu (odpor vinutí, mechanický chod).","Netěsnou vložku ventilu vyměňte."],
+  p:["trojcest"]},
+ {t:"Porucha ventilátoru",
+  c:["Ventilátor nedostává napájení nebo PWM signál","Vadný Hallův snímač otáček (deska nevidí otáčky)","Opotřebená ložiska","Ucpaný odtah spalin"],
+  s:["Poslechem zjistěte, jestli se ventilátor točí.","Netočí se → změřte napájení a PWM signál z desky.","Točí se, ale kotel hlásí poruchu → deska nedostává tachosignál. Zkontrolujte konektor a Hallův snímač.","Hlučný chod → ložiska, vyměnit ventilátor.","Zkontrolujte odtah a sání, ucpání zvyšuje zatížení ventilátoru."],
+  p:["ventilator","odtah"]}
+];
+const GLOSS=[
+["L","Fázový vodič (hnědá, černá, šedá). Je proti zemi pod napětím 230 V."],
+["N","Střední (nulový) vodič, světle modrý."],
+["PE","Ochranný vodič, zelenožlutý. Spojuje neživé části se zemí, za normálního stavu jím neteče proud."],
+["PEN","Vodič s funkcí N i PE zároveň (síť TN-C). Za chráničem nesmí být."],
+["TN-C, TN-S, TN-C-S","Druhy sítí se spojením neživých částí s uzemněným uzlem zdroje. C = PE a N sloučeny, S = odděleny."],
+["TT","Síť, kde mají neživé části vlastní uzemnění nezávislé na uzemnění zdroje."],
+["IT","Síť izolovaná od země. Při první poruše nevypíná, jen hlásí."],
+["NN, VN","Nízké napětí do 1000 V AC, vysoké napětí 1–52 kV."],
+["ELV, SELV, PELV","Malé napětí do 50 V AC. SELV není uzemněné, PELV je uzemněné."],
+["IP","Stupeň krytí. První číslice cizí tělesa a dotyk, druhá voda. Např. IP44."],
+["IK","Odolnost krytu proti mechanickému nárazu."],
+["Třída ochrany I, II, III","I = s ochranným vodičem, II = dvojitá izolace, III = napájení malým napětím."],
+["Jistič","Chrání vedení před přetížením (tepelná spoušť) a zkratem (elektromagnetická spoušť)."],
+["B, C, D","Vypínací charakteristiky jističe. B 3–5× In, C 5–10× In, D 10–20× In."],
+["gG, aM","Pojistky. gG celorozsahová pro vedení, aM zkratová pro motory."],
+["RCD, chránič","Proudový chránič. Vypne, když část proudu odtéká mimo obvod (přes PE nebo člověka)."],
+["IΔn","Vybavovací rozdílový proud chrániče. Pro ochranu osob nejvýše 30 mA."],
+["RCBO","Chránič s nadproudovou ochranou, tedy chránič a jistič v jednom."],
+["IB, In, Iz","Proud obvodu, jmenovitý proud jističe a zatížitelnost vedení. Musí platit IB ≤ In ≤ Iz."],
+["Zs","Impedance poruchové smyčky. Musí být dost malá, aby jistič včas vypnul."],
+["LPS","Systém ochrany před bleskem (hromosvod): jímače, svody, uzemnění."],
+["SPD","Svodič přepětí. Typ 1 na vstupu objektu, typ 2 v rozvaděčích, typ 3 u spotřebičů."],
+["LEMP","Elektromagnetický impulz blesku."],
+["LPZ","Zóna ochrany před bleskem (0A, 0B, 1, 2…)."],
+["CAT II, III, IV","Kategorie měřicího přístroje podle místa měření: zásuvky, rozvaděče, přípojka."],
+["Osoba poučená","Smí obsluhovat elektrická zařízení. Poučení a ověření znalostí zapisuje osoba znalá."],
+["Elektrotechnik","Osoba znalá pro samostatnou činnost (§ 6 NV 194/2022 Sb.)."],
+["Vedoucí elektrotechnik","Osoba znalá pro řízení činnosti (§ 7 NV 194/2022 Sb.)."],
+["Revizní technik","Osoba s osvědčením k revizím vyhrazených elektrických zařízení (§ 8)."],
+["VTZ","Vyhrazené technické zařízení (elektrické, plynové, tlakové, zdvihací). Zákon 250/2021 Sb."],
+["ÚT","Ústřední topení."],
+["TV (TUV)","Teplá (užitková) voda."],
+["SV","Studená voda."],
+["NTC","Teplotní čidlo, jehož odpor s rostoucí teplotou klesá. Typicky 10 kΩ při 25 °C."],
+["STB","Havarijní termostat (bezpečnostní omezovač teploty). Při přehřátí odpojí plynový ventil."],
+["Ionizace","Hlídání plamene. Plamenem teče malý proud (µA), bez něj kotel zavře plyn."],
+["Premix","Plyn a vzduch se smísí před hořákem. Výkon se řídí otáčkami ventilátoru."],
+["Kondenzace","Ochlazení spalin pod rosný bod (asi 55 °C). Vodní pára zkondenzuje a předá další teplo."],
+["PWM","Pulzně šířková modulace. Řídicí signál pro otáčky ventilátoru a čerpadla."],
+["Hallův snímač","Snímač magnetického pole. V kotli měří otáčky ventilátoru a průtok vody."],
+["OpenTherm","Dvouvodičová komunikace mezi kotlem a termostatem na nízkém napětí."],
+["Ekvitermní regulace","Teplota topné vody se řídí podle venkovní teploty."],
+["Trojcestný ventil","Přepíná horkou vodu mezi topením a ohřevem teplé vody."],
+["Expanzní nádoba","Vyrovnává změnu objemu vody při ohřevu."],
+["KPR","Kardiopulmonální resuscitace: 30 stlačení hrudníku a 2 vdechy."],
+["AED","Automatický externí defibrilátor."],
+["Fibrilace komor","Chaotické stahy srdce, srdce nečerpá krev. Hrozí při průchodu proudu srdcem."]
+];
+
+/* ---------- úložiště ---------- */
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let doneL=new Set(LS.get("st-done",[]));
+let wrong=new Set(LS.get("e26wrong",[]));
+let lastExam=LS.get("st-exam",null);
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
+/* ---------- navigace ---------- */
+const VIEWS=["domu","zkouska","ucivo","kotel","zavady","praxe","testy","ustni","slovnik"];
+function go(v,arg){
+  if(!VIEWS.includes(v))v="domu";
+  VIEWS.forEach(x=>document.getElementById("v-"+x).hidden=x!==v);
+  document.querySelectorAll("nav.menu a[data-go]:not(.brand)").forEach(a=>{
+    if(a.dataset.go===v)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  if(v==="domu")renderHome();
+  if(v==="ucivo"){if(arg)openLesson(arg);else closeLesson()}
+  if(v==="kotel"&&arg)showPart(arg);
+  try{history.replaceState(null,"","#"+v)}catch(e){}
+  window.scrollTo({top:0,behavior:"instant"});
+}
+document.addEventListener("click",e=>{
+  const a=e.target.closest("[data-go]");if(!a)return;
+  e.preventDefault();go(a.dataset.go,a.dataset.arg);
+});
+
+/* ---------- domů ---------- */
+function renderHome(){
+  const n=doneL.size;
+  document.getElementById("st-lessons").textContent=`${n} / ${LESSONS.length}`;
+  document.getElementById("st-bar").style.width=(n/LESSONS.length*100)+"%";
+  const last=lastExam;
+  if(last){document.getElementById("st-exam").textContent=last.pct+" %";
+    document.getElementById("st-exam-t").textContent=`poslední simulace zkoušky: ${last.pass?"vyhověl":"nevyhověl"}`}
+  document.getElementById("st-wrong").textContent=wrong.size;
+  const next=LESSONS.find(l=>!doneL.has(l.id));
+  const c=document.getElementById("continue");
+  if(next){c.textContent=`Pokračovat: lekce ${next.k<11?next.k:"11"} – ${next.t} →`;c.dataset.go="ucivo";c.dataset.arg=next.id}
+  else{c.textContent="Všechny lekce hotové. Zkuste simulaci zkoušky →";c.dataset.go="testy";delete c.dataset.arg}
+}
+
+/* ---------- učivo ---------- */
+const lessonsEl=document.getElementById("lessons");
+function renderLessonList(){
+  lessonsEl.innerHTML=LESSONS.map((l,i)=>`<a class="lrow" href="#ucivo" data-go="ucivo" data-arg="${l.id}">
+    <span class="k-num">${i+1}</span><span class="t">${esc(l.t)}</span>${doneL.has(l.id)?'<span class="done">hotovo</span>':'<span class="todo">neprobráno</span>'}</a>`).join("");
+}
+let curL=null;
+function closeLesson(){curL=null;document.getElementById("lesson-list").hidden=false;document.getElementById("lesson-detail").hidden=true;renderLessonList()}
+function openLesson(id){
+  const i=LESSONS.findIndex(l=>l.id===id);if(i<0){closeLesson();return}
+  curL=i;
+  document.getElementById("lesson-list").hidden=true;document.getElementById("lesson-detail").hidden=false;
+  document.querySelectorAll(".lesson-body").forEach(b=>b.hidden=b.dataset.lesson!==id);
+  document.getElementById("lesson-pos").textContent=`Lekce ${i+1} z ${LESSONS.length}`;
+  document.getElementById("l-prev").disabled=i===0;
+  document.getElementById("l-next").disabled=i===LESSONS.length-1;
+  updDone();
+  const qz=document.getElementById("lesson-quiz");
+  const pool=shuffle(Q.filter(q=>q[0]===LESSONS[i].k)).slice(0,5);
+  qz.innerHTML=`<h2>Kontrolní otázky</h2><p class="how">5 náhodných otázek k této lekci. Po odpovědi uvidíte vysvětlení.</p>`;
+  renderQuestions(qz,pool,false);
+}
+function updDone(){
+  const id=LESSONS[curL].id,b=document.getElementById("l-done");
+  b.textContent=doneL.has(id)?"Hotovo ✓ (zrušit)":"Označit lekci jako hotovou";
+  b.classList.toggle("primary",!doneL.has(id));
+}
+document.getElementById("l-done").addEventListener("click",()=>{
+  const id=LESSONS[curL].id;doneL.has(id)?doneL.delete(id):doneL.add(id);LS.set("st-done",[...doneL]);updDone();
+});
+document.getElementById("l-prev").addEventListener("click",()=>{openLesson(LESSONS[curL-1].id);window.scrollTo({top:0})});
+document.getElementById("l-next").addEventListener("click",()=>{openLesson(LESSONS[curL+1].id);window.scrollTo({top:0})});
+
+/* ---------- otázky (společné) ---------- */
+function renderQuestions(box,list,exam){
+  const items=list.map(q=>({q,i:Q.indexOf(q),opts:shuffle([0,1,2])}));
+  let ok=0,done=0;const live=document.createElement("div");live.className="how";
+  if(!exam){live.textContent=`0 / 0 správně`;box.appendChild(live)}
+  items.forEach((it,n)=>{
+    const d=document.createElement("div");d.className="q";const nm=box.id+"q"+n;
+    d.innerHTML=`<div class="meta">${n+1}. · ${TOPICS[it.q[0]]}</div><div class="qt">${esc(it.q[1])}</div>`+
+      it.opts.map(o=>`<label class="opt"><input type="radio" name="${nm}" id="${nm}o${o}" value="${o}"> <span>${esc(it.q[2+o])}</span></label>`).join("")+
+      `<div class="expl" hidden>${esc(it.q[5])}</div>`;
+    it.el=d;box.appendChild(d);
+    if(!exam)d.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",()=>{
+      done++;if(mark(it))ok++;live.textContent=`${ok} / ${done} správně`}));
+  });
+  return items;
+}
+function mark(it){
+  const s=it.el.querySelector("input:checked");const v=s?+s.value:-1;
+  it.el.querySelectorAll(".opt").forEach(l=>{const o=+l.querySelector("input").value;
+    if(o===0)l.classList.add("ok");else if(o===v)l.classList.add("no");l.querySelector("input").disabled=true});
+  it.el.querySelector(".expl").hidden=false;
+  if(v===0)wrong.delete(it.i);else wrong.add(it.i);
+  LS.set("e26wrong",[...wrong]);info();
+  return v===0;
+}
+
+/* ---------- testy ---------- */
+const quiz=document.getElementById("quiz");
+const selTopics=new Set(LS.get("e26topics",Object.keys(TOPICS).map(Number)));
+const topicsEl=document.getElementById("topics");
+Object.entries(TOPICS).forEach(([k,n])=>{
+  const c=Q.filter(q=>q[0]==k).length;const l=document.createElement("label");l.className="chip";
+  l.innerHTML=`<input type="checkbox" id="t${k}" ${selTopics.has(+k)?"checked":""}> ${esc(n)} <span class="how">(${c})</span>`;
+  l.querySelector("input").addEventListener("change",e=>{e.target.checked?selTopics.add(+k):selTopics.delete(+k);LS.set("e26topics",[...selTopics])});
+  topicsEl.appendChild(l);
+});
+function info(){const el=document.getElementById("bank-info");if(el)el.textContent=`Banka: ${Q.length} otázek · uložené chyby k zopakování: ${wrong.size}`}
+info();
+function startSet(list,exam){
+  quiz.innerHTML=`<div><div class="eyebrow">${exam?"Simulace zkoušky":"Procvičování"}</div><b>${list.length} otázek</b></div>`;
+  const items=renderQuestions(quiz,list,exam);
+  if(exam){const b=document.createElement("button");b.className="primary";b.type="button";b.id="btn-eval";b.textContent="Vyhodnotit test";
+    b.addEventListener("click",()=>evaluate(items,b));quiz.appendChild(b)}
+  quiz.scrollIntoView({block:"start"});
+}
+function evaluate(items,btn){
+  const per={};let ok=0;
+  items.forEach(it=>{const r=mark(it);const k=it.q[0];per[k]=per[k]||[0,0];per[k][1]++;if(r){per[k][0]++;ok++}});
+  const pct=Math.round(ok/items.length*100);
+  const failK=Object.entries(per).filter(([k,v])=>v[0]/v[1]<0.5);
+  const pass=pct>=80&&failK.length===0;
+  lastExam={pct,pass};LS.set("st-exam",lastExam);
+  const r=document.createElement("div");r.className="panel";
+  r.innerHTML=`<div class="score ${pass?"pass":"fail"}">${pct} % · ${pass?"Vyhověl":"Nevyhověl"}</div>
+  <p>${ok} z ${items.length} správně. Podmínka: celkem ≥ 80 % a v každém tématu ≥ 50 %.${failK.length?" Pod 50 %: "+failK.map(([k])=>TOPICS[k]).join(", ")+".":""}</p>
+  <div class="tbl"><table><thead><tr><th>Téma</th><th>Správně</th><th></th></tr></thead><tbody>${
+    Object.entries(per).map(([k,v])=>`<tr><td>${k} ${TOPICS[k]}</td><td class="n">${v[0]} / ${v[1]}</td><td><div class="bar"><i style="width:${v[0]/v[1]*100}%"></i></div></td></tr>`).join("")
+  }</tbody></table></div>`;
+  btn.replaceWith(r);quiz.prepend(r.cloneNode(true));quiz.scrollIntoView({block:"start"});
+}
+document.getElementById("btn-exam").addEventListener("click",()=>{
+  const plan={1:7,2:3,3:7,4:3,5:3,6:6,7:1};let list=[];
+  Object.entries(plan).forEach(([k,n])=>{list=list.concat(shuffle(Q.filter(q=>q[0]==k)).slice(0,n))});
+  startSet(shuffle(list),true);
+});
+function practice(src){
+  const n=+document.getElementById("cnt").value;
+  if(!src.length){quiz.innerHTML='<p>Nejsou žádné otázky. Vyberte aspoň jedno téma, nebo nejdřív udělejte test, aby se uložily chyby.</p>';return}
+  startSet(shuffle(src).slice(0,n),false);
+}
+document.getElementById("btn-practice").addEventListener("click",()=>practice(Q.filter(q=>selTopics.has(q[0]))));
+document.getElementById("btn-wrong").addEventListener("click",()=>practice([...wrong].map(i=>Q[i]).filter(Boolean)));
+
+/* ---------- ústní ---------- */
+document.getElementById("cards").innerHTML=CARDS.map(([q,a],i)=>`<details class="card" id="c${i}"><summary>${esc(q)}</summary><div><p>${esc(a)}</p></div></details>`).join("");
+
+/* ---------- slovníček ---------- */
+const gl=document.getElementById("gl");
+function renderGloss(f){f=(f||"").toLowerCase();
+  const rows=GLOSS.filter(([t,d])=>!f||t.toLowerCase().includes(f)||d.toLowerCase().includes(f));
+  gl.innerHTML=rows.length?rows.map(([t,d])=>`<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join(""):'<dd>Nic nenalezeno.</dd>'}
+renderGloss();
+document.getElementById("gsearch").addEventListener("input",e=>renderGloss(e.target.value));
+
+/* ---------- kotel ---------- */
+const svg=document.getElementById("kotel"),kpanel=document.getElementById("kpanel");
+const parts={};svg.querySelectorAll(".part").forEach(g=>parts[g.dataset.id]=g);
+const flows=document.getElementById("flows");
+document.querySelectorAll("#pipes .pipe[data-f]").forEach(p=>{
+  const c=document.createElementNS("http://www.w3.org/2000/svg","path");
+  c.setAttribute("d",p.getAttribute("d"));c.setAttribute("class","fl");c.dataset.f=p.dataset.f;flows.appendChild(c);
+});
+function setFlags(f){
+  const on={air:!!f.fan,gas:!!f.gas,flame:!!f.flame,prim:!!f.pump,heat:f.pump&&f.w==="heat",dhw:f.pump&&f.w==="dhw"};
+  flows.querySelectorAll(".fl").forEach(c=>c.classList.toggle("on",!!on[c.dataset.f]));
+  document.getElementById("fan").classList.toggle("on",!!f.fan);
+  document.getElementById("pump").classList.toggle("on",!!f.pump);
+  document.getElementById("flame").classList.toggle("on",!!f.flame);
+  document.getElementById("spark").classList.toggle("on",!!f.spark);
+  document.getElementById("v3").style.transform=f.w==="dhw"?"rotate(-90deg)":"none";
+  document.getElementById("dtext").textContent=f.flame?(f.w==="dhw"?"TV 48°":"ÚT 62°"):"1,5 bar";
+}
+const MODES={off:{},heat:{pump:1,fan:1,gas:1,flame:1,w:"heat"},dhw:{pump:1,fan:1,gas:1,flame:1,w:"dhw"}};
+const stepBtns=[];
+function clearHl(){Object.values(parts).forEach(g=>g.classList.remove("hl"))}
+function setMode(m){
+  document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.mode===m));
+  clearHl();stepBtns.forEach(b=>b.setAttribute("aria-pressed","false"));
+  document.getElementById("steptext").innerHTML='<p class="how">Vyberte krok 1–8 nebo klikněte na „Další krok“.</p>';
+  setFlags(MODES[m]);
+}
+document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
+const kinfo=document.getElementById("info"),ksel=document.getElementById("sel");
+const ORDER=Object.keys(P).sort((a,b)=>P[a].n-P[b].n);
+ksel.innerHTML='<option value="">— vyberte —</option>'+ORDER.map(id=>`<option value="${id}">${P[id].n}. ${esc(P[id].name)}</option>`).join("");
+ksel.addEventListener("change",()=>{if(ksel.value)showPart(ksel.value)});
+function kstep(d){const i=ORDER.indexOf(ksel.value);showPart(ORDER[(i+d+ORDER.length)%ORDER.length])}
+document.getElementById("prev").addEventListener("click",()=>kstep(-1));
+document.getElementById("next").addEventListener("click",()=>kstep(1));
+function showPart(id,fromPic){
+  const d=P[id];if(!d)return;
+  Object.values(parts).forEach(g=>g.classList.toggle("sel",g.dataset.id===id));
+  ksel.value=id;
+  if(fromPic&&window.innerWidth<=900)kpanel.scrollIntoView({behavior:"smooth",block:"start"});
+  kinfo.innerHTML=`<span class="chipc">${esc(d.cat)}</span>
+  <div class="ptitle"><span class="num">${d.n}</span><h2>${esc(d.name)}</h2></div>
+  <h3>K čemu slouží</h3><p>${esc(d.fn)}</p>
+  <h3>Jak funguje</h3><ul>${d.how.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+  <h3>Pro elektromechanika</h3><div class="measure">${esc(d.el)}</div>
+  <h3>Typické závady</h3><ul>${d.err.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+  ${d.warn?`<div class="warn">${esc(d.warn)}</div>`:""}`;
+}
+kinfo.innerHTML=`<h2>Jak to používat</h2><ol style="margin:0;padding-left:20px;color:var(--muted)">
+<li>Vyberte součást v seznamu výše, nebo listujte tlačítky Předchozí / Další.</li>
+<li>Na obrázku se součást zvýrazní modře a tady se objeví vysvětlení.</li>
+<li>Můžete také kliknout přímo na číslo v kroužku na obrázku.</li></ol>`;
+let kq=null;const qbar=document.getElementById("quizbar");
+function nextQ(){
+  const ids=ORDER.filter(i=>!kq.done.includes(i));
+  if(!ids.length||kq.done.length>=10){document.getElementById("qname").textContent=`Hotovo: ${kq.ok} z ${kq.done.length}`;kq.cur=null;return}
+  kq.cur=ids[Math.floor(Math.random()*ids.length)];
+  document.getElementById("qname").textContent=P[kq.cur].name;
+  document.getElementById("qscore").textContent=`${kq.ok} / ${kq.done.length}`;
+}
+document.getElementById("m-quiz").addEventListener("click",()=>{kq={ok:0,done:[],cur:null};qbar.hidden=false;
+  svg.querySelectorAll(".badge").forEach(b=>b.style.display="none");nextQ();qbar.scrollIntoView({behavior:"smooth",block:"start"})});
+document.getElementById("qend").addEventListener("click",()=>{kq=null;qbar.hidden=true;svg.querySelectorAll(".badge").forEach(b=>b.style.display="")});
+function pick(id){
+  if(kq&&kq.cur){
+    const right=id===kq.cur,g=parts[id];
+    g.classList.add(right?"quiz-ok":"quiz-no");setTimeout(()=>g.classList.remove("quiz-ok","quiz-no"),700);
+    if(right)kq.ok++;else{const c=parts[kq.cur];c.classList.add("quiz-ok");setTimeout(()=>c.classList.remove("quiz-ok"),900)}
+    kq.done.push(kq.cur);showPart(kq.cur);nextQ();return;
+  }
+  showPart(id,true);
+}
+Object.values(parts).forEach(g=>{
+  g.addEventListener("click",()=>pick(g.dataset.id));
+  g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pick(g.dataset.id)}});
+});
+const stepsEl=document.getElementById("steps");
+SEQ.forEach((s,i)=>{const b=document.createElement("button");b.type="button";b.id="st"+i;b.textContent=i+1;b.title=s.t;b.setAttribute("aria-pressed","false");
+  b.addEventListener("click",()=>runStep(i));stepsEl.appendChild(b);stepBtns.push(b)});
+const nb=document.createElement("button");nb.type="button";nb.id="st-next";nb.className="primary";nb.textContent="Další krok →";
+nb.addEventListener("click",()=>{const cur=stepBtns.findIndex(b=>b.getAttribute("aria-pressed")==="true");runStep((cur+1)%SEQ.length)});
+stepsEl.appendChild(nb);
+function runStep(i){
+  const s=SEQ[i];stepBtns.forEach((b,j)=>b.setAttribute("aria-pressed",j===i));
+  document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed","false"));
+  clearHl();s.p.forEach(id=>parts[id].classList.add("hl"));setFlags(s.f);
+  document.getElementById("steptext").innerHTML=`<h3 style="margin-top:0">${i+1}. ${esc(s.t)}</h3><p>${esc(s.d)}</p>
+  <p class="how" style="margin-top:6px">Zapojené součásti: ${s.p.map(id=>P[id].n+" "+esc(P[id].name)).join(" · ")}</p>`;
+}
+setMode("heat");
+
+/* ---------- závady ---------- */
+document.getElementById("faults").innerHTML=ZAV.map((z,i)=>`<details class="card fault" id="z${i}"><summary>${esc(z.t)}</summary><div>
+  <h3 style="margin-top:0">Možné příčiny</h3><ul>${z.c.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+  <h3>Postup</h3><ol>${z.s.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>
+  <div class="cause">${z.p.map(id=>`<a class="btn" href="#kotel" data-go="kotel" data-arg="${id}">Ukázat na kotli: ${esc(P[id].name)}</a>`).join("")}</div>
+</div></details>`).join("");
+
+/* ---------- start ---------- */
+const h=(location.hash||"").slice(1);
+go(VIEWS.includes(h)?h:"domu");
+
+</script>
+
+</body>
+</html>
